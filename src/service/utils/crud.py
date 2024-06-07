@@ -1,7 +1,9 @@
+from hashlib import sha256
+from uuid import uuid4
+
 from sqlalchemy.orm import Session
 
-import models
-import schemas
+from src.service.utils import models, schemas
 
 
 async def get_user(db: Session, user_id: int):
@@ -21,10 +23,14 @@ async def get_users(db: Session, skip: int = 0, limit: int = 100):
 
 
 async def create_user(db: Session, user: schemas.UserCreate):
-    fake_hashed_password = user.password + "52462595-7682-4132-bf80-cc41ee4086cf"
-    db_user = models.User(email=user.email,
-                          nickname=user.nickname,
-                          hashed_password=fake_hashed_password)
+    fake_hashed_password = sha256(sha256(user.password).hexdigest() +
+                                  "52462595-7682-4132-bf80-cc41ee4086cf").hexdigest()
+    db_user = models.User(
+        uuid_user=str(uuid4()),
+        email=user.email,
+        nickname=user.nickname,
+        hashed_password=fake_hashed_password
+    )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
