@@ -3,6 +3,7 @@ from typing import Annotated
 
 import jwt
 from fastapi import Depends, HTTPException, APIRouter, status
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from jwt.exceptions import InvalidTokenError
 
@@ -101,7 +102,7 @@ async def get_current_active_user(
 
 @router.post("/token")
 async def login_for_access_token(
-    form_data: Annotated[OAuth2.OAuth2PasswordRequestForm, Depends()],
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Session = Depends(get_db)
 ) -> schemas.Token:
     """
