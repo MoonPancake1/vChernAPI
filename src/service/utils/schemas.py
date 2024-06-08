@@ -6,7 +6,7 @@ from pydantic import BaseModel
 class ProjectBase(BaseModel):
     title: str
     description: str | None = None
-    create_date: str = str(datetime.datetime.today())
+    create_project_date: str = str(datetime.datetime.today())
     icon: bool = False
     images: bool = False
     link: str = None
@@ -36,9 +36,13 @@ class UserCreate(UserBase):
 class User(UserBase):
     id: int
     uuid_user: str
-    is_active: bool
+    bearer_token: str
+    is_active: bool = True
     hashed_password: str
     projects: list[Project] = []
 
     class Config:
         orm_mode = True
+
+class UserInDB(User):
+    pass
