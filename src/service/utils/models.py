@@ -17,6 +17,7 @@ class User(Base):
     email = Column(String, unique=True)
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
+    is_admin = Column(Boolean, default=False)
 
     projects = relationship("Project", back_populates="owner")
 

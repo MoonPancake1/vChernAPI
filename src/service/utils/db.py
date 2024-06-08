@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from sqlalchemy import create_engine, TIMESTAMP, func
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, DeclarativeBase, mapped_column, Mapped, declared_attr
 from src.service.utils import models
 
