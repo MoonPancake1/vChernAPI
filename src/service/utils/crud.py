@@ -6,7 +6,7 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from src.service.utils import models, schemas, OAuth2
-from src.service.utils.OAuth2 import get_bearer_token, oauth2_scheme
+from src.service.utils.OAuth2 import oauth2_scheme
 
 
 async def get_user(db: Session, user_id: int):
@@ -73,8 +73,7 @@ async def create_user(db: Session, user: schemas.UserCreate):
         uuid_user=uuid_user,
         email=user.email,
         nickname=user.nickname,
-        hashed_password=hashed_password,
-        bearer_token=get_bearer_token(user.nickname, hashed_password)
+        hashed_password=hashed_password
     )
     db.add(db_user)
     db.commit()
