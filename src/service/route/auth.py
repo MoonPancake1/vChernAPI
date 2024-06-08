@@ -13,12 +13,25 @@ router = APIRouter(prefix="/login", tags=["auth"])
 async def decode_token(db, token):
     # This doesn't provide any security at all
     # Check the next version
+    """
+    Функция для декодированя bearer token
+    :param db: активная сессия с базой данных
+    :param token: токен для декодирования
+    :return: объект пользователя
+    """
     user = await crud.get_user_by_token(db=db, token=token)
     return user
 
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)],
                            db: Session = Depends(get_db)):
+    """
+    Функция для получения текущего пользователя после декодирования
+    bearer token
+    :param token: токен авторизации
+    :param db: активная сессия с базой данных
+    :return: объект пользователя
+    """
     user = await decode_token(db=db, token=token)
     if not user:
         raise HTTPException(
@@ -32,6 +45,11 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)],
 async def get_current_active_user(
     current_user: Annotated[schemas.User, Depends(get_current_user)],
 ):
+    """
+    Функция проверяет аккаунт пользователя на деактивацию
+    :param current_user: объект пользователя
+    :return: Если пользователь активен, то объект пользователя, иначе ошибку
+    """
     if not current_user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
@@ -40,6 +58,12 @@ async def get_current_active_user(
 @router.post("/token")
 async def login(form_data: Annotated[OAuth2.OAuth2PasswordRequestForm, Depends()],
                 db: Session = Depends(get_db)):
+    """
+    Функция аунтификации пользователя в системе
+    :param form_data: данные из формы
+    :param db: активная сессия с базой данных
+    :return: bearer_token
+    """
     user = await crud.get_user_by_nickname(db=db, nickname=form_data.username)
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect username or password")

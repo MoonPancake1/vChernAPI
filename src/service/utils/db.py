@@ -15,6 +15,9 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 class Base(DeclarativeBase):
+    """
+    Базавая модель для всех моделей в проекте
+    """
     __abstarct__ = True
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -33,6 +36,10 @@ class Base(DeclarativeBase):
 
 # Dependency
 def get_db():
+    """
+    Функция для создания сессии с базой данных
+    :return: активная сессия с базойй данных
+    """
     db = SessionLocal()
     try:
         yield db
@@ -41,4 +48,8 @@ def get_db():
 
 
 def initialize_database():
+    """
+    Функция для создания всех моделей в базе данных
+    :return: None
+    """
     models.Base.metadata.create_all(bind=engine)

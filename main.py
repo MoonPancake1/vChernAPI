@@ -10,6 +10,6 @@ app = FastAPI(
     title=settings.PROJECT_NAME,
     debug=settings.DEBUG,
     version=settings.VERSION
-)
+) # Объект API всего приложения
 
-app.include_router(get_apps_router())
+app.include_router(get_apps_router()) # включение маршрутизатора в основное приложение

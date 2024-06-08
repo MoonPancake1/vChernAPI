@@ -4,6 +4,9 @@ from pydantic import BaseModel
 
 
 class ProjectBase(BaseModel):
+    """
+    Базовая модель для таблицы с проектами
+    """
     title: str
     description: str | None = None
     create_project_date: str = str(datetime.datetime.today())
@@ -13,10 +16,16 @@ class ProjectBase(BaseModel):
 
 
 class ProjectCreate(ProjectBase):
+    """
+    Модель для создания записи проекта
+    """
     pass
 
 
 class Project(ProjectBase):
+    """
+    Модель полной записи для таблицы
+    """
     id: int
     author_id: int
 
@@ -25,15 +34,24 @@ class Project(ProjectBase):
 
 
 class UserBase(BaseModel):
+    """
+    Базовая модель для таблицы с пользователями
+    """
     nickname: str
     email: str
 
 
 class UserCreate(UserBase):
+    """
+    Модель для создания записи в базе данных
+    """
     password: str
 
 
 class User(UserBase):
+    """
+    Модель для полного представления объекта в коде
+    """
     id: int
     uuid_user: str
     bearer_token: str
@@ -43,6 +61,3 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
-
-class UserInDB(User):
-    pass

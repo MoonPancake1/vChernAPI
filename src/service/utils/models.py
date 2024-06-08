@@ -7,6 +7,9 @@ from src.service.utils.db import Base
 
 
 class User(Base):
+    """
+    Модель пользователя
+    """
     __tablename__ = "users"
 
     uuid_user = Column(String, unique=True)
@@ -20,6 +23,9 @@ class User(Base):
 
 
 class Project(Base):
+    """
+    Модель для проектов
+    """
     __tablename__ = "projects"
 
     title = Column(String, index=True)
