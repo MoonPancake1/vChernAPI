@@ -1,8 +1,11 @@
+from typing import Annotated
+
 from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
 
-from src.service.utils import schemas, crud
-# from src.service.utils.OAuth2 import oauth2_scheme
+from src.service.route.auth import get_current_active_user
+from src.service.utils import schemas, crud, models
+from src.service.utils.OAuth2 import oauth2_scheme
 from src.service.utils.db import get_db
 
 router = APIRouter(prefix="/users", tags=["users"])
@@ -32,7 +35,14 @@ async def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_
     return users
 
 
-@router.get("/{user_id}", response_model=schemas.User)
+@router.get("/me")
+async def read_users_me(
+        current_user: Annotated[schemas.User, Depends(get_current_active_user)],
+):
+    return current_user
+
+
+@router.get("/get/{user_id}", response_model=schemas.User)
 async def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = await crud.get_user(db, user_id=user_id)
     if db_user is None:
@@ -42,12 +52,11 @@ async def read_user(user_id: int, db: Session = Depends(get_db)):
 
 @router.post("/{author_id}/project/", response_model=schemas.Project)
 async def create_project_for_user(
-    # token: Annotated[str, Depends(oauth2_scheme)],
-    author_id: int, project: schemas.ProjectCreate, db: Session = Depends(get_db)
+        # token: Annotated[str, Depends(oauth2_scheme)],
+        author_id: int, project: schemas.ProjectCreate, db: Session = Depends(get_db)
 ):
     print(author_id)
     return crud.create_user_project(db=db, project=project, author_id=author_id)
-
 
 # @router.get("")
 # async def exists_category_for_name(name: str, user: User = Depends(is_admin)) -> bool:
