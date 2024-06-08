@@ -11,11 +11,6 @@ from src.service.utils.db import get_db
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-# Todo: Написать функцию проверки пользователя на администратора
-# def is_admin():
-#     return User(id=1)
-
-
 @router.post("/", response_model=schemas.User)
 async def create_user(
         # token: Annotated[str, Depends(oauth2_scheme)],

@@ -64,6 +64,7 @@ class User(UserBase):
     id: int
     uuid_user: str
     is_active: bool = True
+    is_admin: bool = False
     hashed_password: str
     projects: list[Project] = []
 
