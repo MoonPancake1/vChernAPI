@@ -1,7 +1,17 @@
-from fastapi import APIRouter
-from starlette.responses import HTMLResponse
+import datetime
+
+from fastapi import APIRouter, Cookie
+from starlette.responses import HTMLResponse, JSONResponse
 
 router = APIRouter(prefix="/test", tags=["test"])
+
+
+@router.get("/cookie")
+async def read_items(last_visit: str | None = Cookie(default=None)):
+    response = JSONResponse(content={"last_execute": last_visit})
+    response.set_cookie(key="last_visit", value=datetime.datetime.now())
+    return response
+
 
 @router.get("/test_upload_files/")
 async def main():

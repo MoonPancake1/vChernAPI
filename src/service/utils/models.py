@@ -16,7 +16,6 @@ class User(Base):
     nickname = Column(String, unique=True, index=True)
     email = Column(String, unique=True)
     hashed_password = Column(String)
-    bearer_token = Column(String, index=True)
     is_active = Column(Boolean, default=True)
 
     projects = relationship("Project", back_populates="owner")

@@ -15,8 +15,6 @@ router = APIRouter(prefix="/login", tags=["auth"])
 
 
 async def decode_token(db, token):
-    # This doesn't provide any security at all
-    # Check the next version
     """
     Функция для декодированя bearer token
     :param db: активная сессия с базой данных
@@ -28,6 +26,13 @@ async def decode_token(db, token):
 
 
 async def authenticate_user(db, nickname: str, password: str):
+    """
+    Функция для аунтефикации пользователя
+    :param db: активная сессия с базой данных
+    :param nickname: имя пользователя
+    :param password: пароль пользователя
+    :return: объект пользователя
+    """
     user = await crud.get_user_by_nickname(db, nickname)
     if not user:
         return False
@@ -38,6 +43,13 @@ async def authenticate_user(db, nickname: str, password: str):
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)],
                            db: Session = Depends(get_db)):
+    """
+    Функция для получения текущего пользователя после декодирования
+    bearer token
+    :param token: токен авторизации
+    :param db: активная сессия с базой данных
+    :return: объект пользователя
+    """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -58,6 +70,12 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)],
 
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
+    """
+    Функция для создания JWT токена авторизации
+    :param data: данные о пользователе
+    :param expires_delta: длительность жизни токена в минутах
+    :return: JWT токен авторизации
+    """
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
@@ -66,25 +84,6 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
-
-
-# async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)],
-#                            db: Session = Depends(get_db)):
-#     """
-#     Функция для получения текущего пользователя после декодирования
-#     bearer token
-#     :param token: токен авторизации
-#     :param db: активная сессия с базой данных
-#     :return: объект пользователя
-#     """
-#     user = await decode_token(db=db, token=token)
-#     if not user:
-#         raise HTTPException(
-#             status_code=status.HTTP_401_UNAUTHORIZED,
-#             detail="Invalid authentication credentials",
-#             headers={"WWW-Authenticate": "Bearer"},
-#         )
-#     return user
 
 
 async def get_current_active_user(
@@ -105,6 +104,12 @@ async def login_for_access_token(
     form_data: Annotated[OAuth2.OAuth2PasswordRequestForm, Depends()],
     db: Session = Depends(get_db)
 ) -> schemas.Token:
+    """
+    Функция для авторизации пользователя
+    :param form_data: данные о пользователе
+    :param db: активная сессия с базой данных
+    :return: JWT токен авторизации
+    """
     user = await authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -117,24 +122,3 @@ async def login_for_access_token(
         data={"sub": user.nickname}, expires_delta=access_token_expires
     )
     return schemas.Token(access_token=access_token, token_type="bearer")
-
-
-# @router.post("/token")
-# async def login(form_data: Annotated[OAuth2.OAuth2PasswordRequestForm, Depends()],
-#                 db: Session = Depends(get_db)):
-#     """
-#     Функция аунтификации пользователя в системе
-#     :param form_data: данные из формы
-#     :param db: активная сессия с базой данных
-#     :return: bearer_token
-#     """
-#     user = await crud.get_user_by_nickname(db=db, nickname=form_data.username)
-#     if not user:
-#         raise HTTPException(status_code=400, detail="Incorrect username or password")
-#     hashed_password = OAuth2.get_hash_password(form_data.password)
-#     if not hashed_password == user.hashed_password:
-#         raise HTTPException(status_code=400, detail="Incorrect username or password")
-#
-#     bearer_token = OAuth2.get_bearer_token(user.nickname, user.hashed_password)
-#     return {"access_token": bearer_token, "token_type": "bearer"}
-

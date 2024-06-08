@@ -63,7 +63,6 @@ class User(UserBase):
     """
     id: int
     uuid_user: str
-    bearer_token: str
     is_active: bool = True
     hashed_password: str
     projects: list[Project] = []
