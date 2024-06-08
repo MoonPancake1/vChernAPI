@@ -67,9 +67,10 @@ async def create_user(db: Session, user: schemas.UserCreate):
     :param user: объект user по макету schemas.UserCreate
     :return: данные о пользователе
     """
-    hashed_password = OAuth2.get_hash_password(user.password)
+    uuid_user = str(uuid4())
+    hashed_password = OAuth2.get_password_hash(user.password)
     db_user = models.User(
-        uuid_user=str(uuid4()),
+        uuid_user=uuid_user,
         email=user.email,
         nickname=user.nickname,
         hashed_password=hashed_password,
