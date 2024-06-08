@@ -5,6 +5,10 @@ router = APIRouter(prefix="/test", tags=["test"])
 
 @router.get("/test_upload_files/")
 async def main():
+    """
+    Какая-то тестовая форма для загрузки файлов на сервер
+    :return:
+    """
     content = """
 <body>
 <form action="/files/uploadfile/" enctype="multipart/form-data" method="post">

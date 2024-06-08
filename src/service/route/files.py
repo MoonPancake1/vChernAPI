@@ -8,6 +8,11 @@ router = APIRouter(prefix="/files", tags=["files"])
 
 @router.post("/uploadfile/")
 async def create_upload_file(file: UploadFile | None = None):
+    """
+    Функция для загрузки файла на сервер
+    :param file: объект файла
+    :return: результат операции
+    """
     if not file:
         return {"result": "error",
                 "message": "No upload file sent"}
@@ -23,6 +28,11 @@ async def create_upload_file(file: UploadFile | None = None):
 
 @router.post("/uploadfiles/")
 async def create_upload_files(files: list[UploadFile]):
+    """
+    Функция для загрузки мнодества файлов на сервер
+    :param files: список из файлов
+    :return: результат операции
+    """
     if len(files) == 0:
         return {"result": "error",
         "message": "No upload files sent"}
