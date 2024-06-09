@@ -281,3 +281,4 @@ vChernTestDB.db
 config.py
 settings.py
 *.env
+static

@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+# from fastapi.middleware.cors import CORSMiddleware
 
 from src.config.project_config.config import settings
 from src.service.route.routes import get_apps_router
@@ -12,6 +13,8 @@ app = FastAPI(
     debug=settings.DEBUG,
     version=settings.VERSION
 ) # Объект API всего приложения
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # origins = [
 #     "http://api.vchern.me",
