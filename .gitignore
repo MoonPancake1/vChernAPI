@@ -280,3 +280,4 @@ $RECYCLE.BIN/
 vChernTestDB.db
 config.py
 settings.py
+*.env
