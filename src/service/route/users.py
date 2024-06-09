@@ -4,7 +4,7 @@ from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
 
 from src.service.route.auth import get_current_active_user
-from src.service.utils import schemas, crud, models
+from src.service.utils import schemas, crud
 from src.service.utils.OAuth2 import oauth2_scheme
 from src.service.utils.db import get_db
 

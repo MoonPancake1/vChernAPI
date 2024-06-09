@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.config.project_config import settings
+from src.config.project_config.config import settings
 from src.service.route.routes import get_apps_router
 from src.service.utils.db import initialize_database
 
