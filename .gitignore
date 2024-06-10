@@ -282,3 +282,4 @@ config.py
 settings.py
 *.env
 static
+update-script
