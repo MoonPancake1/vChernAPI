@@ -2,13 +2,19 @@ from datetime import datetime
 
 from sqlalchemy import create_engine, TIMESTAMP, func
 from sqlalchemy.orm import sessionmaker, DeclarativeBase, mapped_column, Mapped, declared_attr
+
+from src.config.project_config.config import settings
 from src.service.utils import models
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./vChernTestDB.db"
-# SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
+
+# SQLALCHEMY_DATABASE_URL = "sqlite:///./vChernTestDB.db"
+# SQLALCHEMY_DATABASE_URL = "postgresql://postgres:123@localhost:5432/postgres"
+# SQLALCHEMY_DATABASE_URL = f"postgresql://postgres:1@vchern.me:5432/postgres"
+SQLALCHEMY_DATABASE_URL = f"{settings.DB_ENGINE}://{settings.DB_USER}:{settings.DB_PASSWORD}@{settings.DB_HOST}/" + \
+                           f"{settings.DB_NAME}"
 
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+    SQLALCHEMY_DATABASE_URL, connect_args={}
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
