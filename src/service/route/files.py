@@ -23,7 +23,7 @@ async def create_upload_file(file: UploadFile | None = None):
         async with aiofiles.open(full_file_name, "wb") as out_file:
             content = await file.read()  # Асинхронно читаем данные из файла
             await out_file.write(content)  # Асинхронно записываем файл на сервер
-        return {"result": "ok"}
+        return {"result": "ok", "file": full_file_name}
 
 
 @router.post("/uploadfiles/")
@@ -37,12 +37,14 @@ async def create_upload_files(files: list[UploadFile]):
         return {"result": "error",
         "message": "No upload files sent"}
     else:
+        files_response = []
         for file in files:
             file_path = "static/img/"
             file_name = f"{uuid.uuid4()}.{file.content_type.split('/')[1]}"
             full_file_name = file_path + file_name
+            files_response.append(full_file_name)
             async with aiofiles.open(full_file_name, "wb") as out_file:
                 content = await file.read()  # Асинхронно читаем данные из файла
                 await out_file.write(content)  # Асинхронно записываем файл на сервер
-        return {"result": "ok"}
+        return {"result": "ok", "files": files_response}
 
