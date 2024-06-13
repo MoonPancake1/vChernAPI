@@ -20,6 +20,7 @@ MarkupSafe==2.1.5
 mdurl==0.1.2
 orjson==3.10.3
 passlib==1.7.4
+psycopg2-binary==2.9.9
 pydantic==2.7.3
 pydantic-settings==2.3.1
 pydantic_core==2.18.4

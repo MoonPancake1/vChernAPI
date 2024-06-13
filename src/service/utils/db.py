@@ -10,8 +10,11 @@ from src.service.utils import models
 if settings.DEBUG:
     SQLALCHEMY_DATABASE_URL = "sqlite:///./vChernTestDB.db"
 else:
-    SQLALCHEMY_DATABASE_URL = f"{settings.DB_ENGINE}://{database.DB_USER}:{database.DB_PASSWORD}@{settings.DB_HOST}/" + \
-                              f"{database.DB_NAME}"
+    SQLALCHEMY_DATABASE_URL = f"{settings.DB_ENGINE}://{database.POSTGRES_USER}:{database.POSTGRES_PASSWORD}@{settings.DB_HOST}/" + \
+                              f"{database.POSTGRES_DB}"
+
+# SQLALCHEMY_DATABASE_URL = f"{settings.DB_ENGINE}://{database.POSTGRES_USER}:{database.POSTGRES_PASSWORD}@{settings.DB_HOST}/" + \
+#                               f"{database.POSTGRES_DB}"
 # SQLALCHEMY_DATABASE_URL = "postgresql://postgres:123@localhost:5432/postgres"
 # SQLALCHEMY_DATABASE_URL = f"postgresql://postgres:1@vchern.me:5432/postgres"
 
