@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     DB_PASSWORD: str
     DB_HOST: str
     DB_NAME: str
+    API_URL: str
 
     model_config = SettingsConfigDict(env_file=".env")
 
