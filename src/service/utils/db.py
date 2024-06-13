@@ -7,11 +7,13 @@ from src.config.project_config.config import settings
 from src.service.utils import models
 
 
-# SQLALCHEMY_DATABASE_URL = "sqlite:///./vChernTestDB.db"
+if settings.DEBUG:
+    SQLALCHEMY_DATABASE_URL = "sqlite:///./vChernTestDB.db"
+else:
+    SQLALCHEMY_DATABASE_URL = f"{settings.DB_ENGINE}://{settings.DB_USER}:{settings.DB_PASSWORD}@{settings.DB_HOST}/" + \
+                              f"{settings.DB_NAME}"
 # SQLALCHEMY_DATABASE_URL = "postgresql://postgres:123@localhost:5432/postgres"
 # SQLALCHEMY_DATABASE_URL = f"postgresql://postgres:1@vchern.me:5432/postgres"
-SQLALCHEMY_DATABASE_URL = f"{settings.DB_ENGINE}://{settings.DB_USER}:{settings.DB_PASSWORD}@{settings.DB_HOST}/" + \
-                           f"{settings.DB_NAME}"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={}

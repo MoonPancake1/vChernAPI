@@ -11,7 +11,9 @@ initialize_database()
 app = FastAPI(
     title=settings.PROJECT_NAME,
     debug=settings.DEBUG,
-    version=settings.VERSION
+    version=settings.VERSION,
+    # openapi_url=settings.API_URL,
+    # docs_url=settings.API_URL + 'docs/',
 ) # Объект API всего приложения
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
