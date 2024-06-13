@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  vchern_api_service:
+    build: .
+    volumes:
+      - vchern_api_service:/code/
+    ports:
+      - "10900:8000"
+    depends_on:
+      - vchern_api_db
+
+  vchern_api_db:
+    image: postgres:alpine
+    volumes:
+      - postgres_data_vchern_api:/var/lib/postgresql/data/
+    ports:
+      - "10800:5432"
+
+  nginx_vchern_api:
+    image: nginx:alpine
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./nginx/nginx_config.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - vchern_api_service
+
+volumes:
+  postgres_data_vchern_api:
+  vchern_api_service:

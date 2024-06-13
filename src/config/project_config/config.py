@@ -18,4 +18,14 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env")
 
 
+class DataBaseSettings(BaseSettings):
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_DB: str
+
+    model_config = SettingsConfigDict(env_file=".env.db")
+
+
 settings = Settings()
+database = DataBaseSettings()
+
