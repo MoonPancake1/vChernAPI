@@ -1,45 +1,14 @@
-import datetime
-
 from pydantic import BaseModel
 
 
 class Token(BaseModel):
     access_token: str
-    token_type: str
+    refresh_token: str | None = None
+    token_type: str = "Bearer"
 
 
 class TokenData(BaseModel):
     username: str | None = None
-
-
-class ProjectBase(BaseModel):
-    """
-    Базовая модель для таблицы с проектами
-    """
-    title: str
-    description: str | None = None
-    create_project_date: str = str(datetime.datetime.today())
-    icon: bool = False
-    images: bool = False
-    link: str = None
-
-
-class ProjectCreate(ProjectBase):
-    """
-    Модель для создания записи проекта
-    """
-    pass
-
-
-class Project(ProjectBase):
-    """
-    Модель полной записи для таблицы
-    """
-    id: int
-    author_id: int
-
-    class Config:
-        orm_mode = True
 
 
 class UserBase(BaseModel):
@@ -57,16 +26,23 @@ class UserCreate(UserBase):
     password: str
 
 
-class User(UserBase):
+class User(BaseModel):
     """
     Модель для полного представления объекта в коде
     """
-    id: int
     uuid_user: str
+    nickname: str
+    email: str
     is_active: bool = True
     is_admin: bool = False
-    hashed_password: str
-    projects: list[Project] = []
+    avatar: str
 
     class Config:
         orm_mode = True
+
+
+class UserUpdate(UserBase):
+    """
+
+    """
+    avatar: str | None = None

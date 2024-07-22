@@ -80,27 +80,11 @@ async def create_user(db: Session, user: schemas.UserCreate):
     return db_user
 
 
-async def get_projects(db: Session, skip: int = 0, limit: int = 100):
-    """
-    Функция для выдачи определённого кол-ва проектов
-    :param db: активная сессия с базой данных
-    :param skip: сколько проектов с начала пропустить
-    :param limit: кол-во проектов в ответе
-    :return: список проектов
-    """
-    return db.query(models.Project).offset(skip).limit(limit).all()
-
-
-async def create_user_project(db: Session, project: schemas.ProjectCreate, author_id: int):
-    """
-    Функция для создания проекта
-    :param db: активная сессия с базой данных
-    :param project: объект project по макету schemas.ProjectCreate
-    :param author_id: id пользователя
-    :return: данные о проекте по макету schemas.Project
-    """
-    db_project = models.Project(**project.dict(), author_id=author_id)
-    db.add(db_project)
+async def update_user_data(db: Session,
+                           current_user: schemas.User) -> [bool, str]:
+    user = db.query(models.User).filter(models.User.id == current_user.id).first()
+    user.nickname = current_user.nickname
+    user.email = current_user.email
+    user.avatar = current_user.avatar
     db.commit()
-    db.refresh(db_project)
-    return db_project
+    return True

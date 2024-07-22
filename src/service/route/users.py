@@ -5,15 +5,29 @@ from sqlalchemy.orm import Session
 
 from src.service.route.auth import get_current_active_user
 from src.service.utils import schemas, crud
-from src.service.utils.OAuth2 import oauth2_scheme
 from src.service.utils.db import get_db
 
 router = APIRouter(prefix="/users", tags=["users"])
 
 
+@router.get("/check/")
+async def check_users(nickname: str | None = None,
+                      email: str | None = None,
+                      db: Session = Depends(get_db)):
+    data = {}
+    if nickname:
+        username_check = await crud.get_user_by_nickname(db, nickname=nickname)
+        data.update({"nickname": bool(username_check)})
+    if email:
+        email_check = bool(await crud.get_user_by_email(db, email))
+        data.update({"email": email_check})
+    return data
+
+
+
+
 @router.post("/", response_model=schemas.User)
 async def create_user(
-        # token: Annotated[str, Depends(oauth2_scheme)],
         user: schemas.UserCreate, db: Session = Depends(get_db)):
     """
     Функция для создания пользователя в базе данных
@@ -31,8 +45,11 @@ async def create_user(
     return await crud.create_user(db=db, user=user)
 
 
-@router.get("/", response_model=list[schemas.User])
-async def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+@router.get("/", response_model=list[schemas.User]|dict)
+async def read_users(
+        current_user: Annotated[schemas.User, Depends(get_current_active_user)],
+        skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
+):
     """
     Функция читает от skip до limit включительно пользователей из базы данных
     и возвращает их в виде списка
@@ -41,13 +58,16 @@ async def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_
     :param db: активная сессия с базой данных
     :return: Список пользователей
     """
-    users = await crud.get_users(db, skip=skip, limit=limit)
-    return users
+    if current_user.is_admin:
+        users = await crud.get_users(db, skip=skip, limit=limit)
+        return users
+    return {"detail": "Current user is not admin"}
 
 
 @router.get("/me")
-async def read_users_me(
+async def read_user_me(
         current_user: Annotated[schemas.User, Depends(get_current_active_user)],
+        db: Session = Depends(get_db)
 ):
     """
     Функция, которая возвращает данные о текущем пользователе
@@ -55,6 +75,34 @@ async def read_users_me(
     :return: объект user
     """
     return current_user
+
+
+@router.post("/me")
+async def update_user_me(
+        current_user: Annotated[schemas.User, Depends(get_current_active_user)],
+        new_user_data: schemas.UserUpdate,
+        db: Session = Depends(get_db)
+):
+    check = await check_users(new_user_data.nickname, new_user_data.email, db)
+    if new_user_data.nickname:
+        if (not check.get("nickname")) and \
+                new_user_data.nickname != current_user.nickname:
+            current_user.nickname = new_user_data.nickname
+        else:
+            raise HTTPException(status_code=400,
+                                detail="Никнейм уже существует")
+    if new_user_data.email:
+        if (not check.get("email")) and \
+                new_user_data.email != current_user.email:
+            current_user.email = new_user_data.email
+        else:
+            raise HTTPException(status_code=400,
+                                detail="Почта уже привязана!")
+    if new_user_data.avatar:
+        current_user.avatar = new_user_data.avatar
+    await crud.update_user_data(db, current_user)
+    return {"user": current_user, "result": True}
+
 
 
 @router.get("/get/{user_id}", response_model=schemas.User)
@@ -69,26 +117,3 @@ async def read_user(user_id: int, db: Session = Depends(get_db)):
     if db_user is None:
         raise HTTPException(status_code=404, detail="Пользователя не существует!")
     return db_user
-
-
-@router.post("/{author_id}/project/", response_model=schemas.Project)
-async def create_project_for_user(
-        token: Annotated[str, Depends(oauth2_scheme)],
-        author_id: int, project: schemas.ProjectCreate, db: Session = Depends(get_db)
-):
-    """
-    Функция для создания проекта пользователя
-    :param token: токен авторизации пользователя
-    :param author_id: id пользователя
-    :param project: объект Project в макете schemas.Project
-    :param db: активная сессия с базой данных
-    :return: процесс создания проекта в базе данных
-    """
-    return await crud.create_user_project(db=db, project=project, author_id=author_id)
-
-# @router.get("")
-# async def exists_category_for_name(name: str, user: User = Depends(is_admin)) -> bool:
-#     try:
-#         return await category_service.exists(name)
-#     except Exception as e:
-#         raise HTTPException(HTTP_400_BAD_REQUEST, str(e))

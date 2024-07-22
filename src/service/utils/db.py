@@ -6,7 +6,6 @@ from sqlalchemy.orm import sessionmaker, DeclarativeBase, mapped_column, Mapped,
 from src.config.project_config.config import settings, database
 from src.service.utils import models
 
-
 if settings.DEBUG:
     SQLALCHEMY_DATABASE_URL = "sqlite:///./vChernTestDB.db"
 else:
