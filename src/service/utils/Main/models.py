@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, JSON, ForeignKey
+from sqlalchemy import Column, Integer, String, Date, JSON, ForeignKey
 
 from src.service.utils.db import Base
 
@@ -13,11 +13,13 @@ class Projects(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String)
     description = Column(String)
-    realize_project = Column(DateTime)
+    realize_project = Column(Date)
     stack = Column(JSON)
     status = Column(String)
     view = Column(Integer)
     link_logo = Column(String)
+    github_link = Column(String)
+    project_link = Column(String)
 
 
 class Project_Grades(Base):
