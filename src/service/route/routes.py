@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
-from .ID import routes
+from .ID import routes as IDRoutes
+from .Main import routes as MainRoutes
 
 
 def get_apps_router():
@@ -9,5 +10,6 @@ def get_apps_router():
     :return: маршрутизатор
     """
     router = APIRouter()
-    router.include_router(routes.router)
+    router.include_router(IDRoutes.router)
+    router.include_router(MainRoutes.router)
     return router
