@@ -32,7 +32,7 @@ async def get_user_by_uuid(db: Session, uuid: str):
     """
     Функция возвращает пользователя с определённыйм uuid
     """
-    return db.query(models.User).filter(models.User.uuid_user == uuid).first()
+    return db.query(models.User).filter(models.User.uuid == uuid).first()
 
 
 async def get_user_by_email(db: Session, email: str):

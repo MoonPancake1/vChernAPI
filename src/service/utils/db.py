@@ -4,7 +4,6 @@ from sqlalchemy import create_engine, TIMESTAMP, func
 from sqlalchemy.orm import sessionmaker, DeclarativeBase, mapped_column, Mapped, declared_attr
 
 from src.config.project_config.config import settings, database
-from src.service.utils.ID import models
 
 if settings.DEBUG:
     SQLALCHEMY_DATABASE_URL = "sqlite:///./vChernTestDB.db"
@@ -22,12 +21,11 @@ engine = create_engine(
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-
 class Base(DeclarativeBase):
     """
     Базавая модель для всех моделей в проекте
     """
-    __abstarct__ = True
+    __abstract__ = True
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
@@ -61,4 +59,4 @@ def initialize_database():
     Функция для создания всех моделей в базе данных
     :return: None
     """
-    models.Base.metadata.create_all(bind=engine)
+    # models.Base.metadata.create_all(bind=engine)
