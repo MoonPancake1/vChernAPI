@@ -3,8 +3,8 @@ from typing import Annotated
 from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
 
-from src.service.route.auth import get_current_active_user
-from src.service.utils import schemas, crud
+from src.service.route.ID.auth import get_current_active_user
+from src.service.utils.ID import schemas, crud
 from src.service.utils.db import get_db
 
 router = APIRouter(prefix="/users", tags=["users"])
@@ -45,7 +45,7 @@ async def create_user(
     return await crud.create_user(db=db, user=user)
 
 
-@router.get("/", response_model=list[schemas.User]|dict)
+@router.get("/", response_model=list[schemas.User] | dict)
 async def read_users(
         current_user: Annotated[schemas.User, Depends(get_current_active_user)],
         skip: int = 0, limit: int = 100, db: Session = Depends(get_db)

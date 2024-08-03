@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, TIMESTAMP, func
 from sqlalchemy.orm import sessionmaker, DeclarativeBase, mapped_column, Mapped, declared_attr
 
 from src.config.project_config.config import settings, database
-from src.service.utils import models
+from src.service.utils.ID import models
 
 if settings.DEBUG:
     SQLALCHEMY_DATABASE_URL = "sqlite:///./vChernTestDB.db"

@@ -8,8 +8,8 @@ from sqlalchemy.orm import Session
 from jwt.exceptions import InvalidTokenError
 
 from src.config.project_config.config import settings
-from src.service.utils import crud, schemas
-from src.service.utils.OAuth2 import oauth2_scheme, verify_password
+from src.service.utils.ID import schemas, crud
+from src.service.utils.ID.OAuth2 import oauth2_scheme, verify_password
 from src.service.utils.db import get_db
 
 http_bearer = HTTPBearer(auto_error=False)
@@ -51,16 +51,17 @@ async def get_current_user_by_token(token: Annotated[str, Depends(oauth2_scheme)
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         if payload.get("type") == token_type:
-            username: str = payload.get("sub")
-            if username is None:
+            uuid: str = payload.get("sub")
+            if uuid is None:
                 raise credentials_exception
-            token_data = schemas.TokenData(username=username)
+            token_data = schemas.TokenData(uuid=uuid)
         else:
             raise incorrect_token_exception
     except InvalidTokenError:
         raise credentials_exception
-    user = await crud.get_user_by_nickname(db, token_data.username)
+    user = await crud.get_user_by_uuid(db, token_data.uuid)
     if user is None:
+        print(user)
         raise credentials_exception
     return user
 
@@ -148,7 +149,7 @@ async def get_current_active_user(
 @router.post("/refresh/",
              response_model=schemas.Token,
              response_model_exclude_none=True)
-async def auth_refresh_jwt(user: Annotated[schemas.User, Depends(get_current_user_for_refresh)],):
+async def auth_refresh_jwt(user: Annotated[schemas.User, Depends(get_current_user_for_refresh)], ):
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"type": "access",
@@ -191,4 +192,4 @@ async def login_for_access_token(
     )
 
     return schemas.Token(access_token=access_token,
-                         refresh_token=refresh_token,)
+                         refresh_token=refresh_token, )

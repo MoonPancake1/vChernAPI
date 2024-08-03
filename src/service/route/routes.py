@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from . import users, files, testing, auth
+from .ID import routes
 
 
 def get_apps_router():
@@ -9,8 +9,5 @@ def get_apps_router():
     :return: маршрутизатор
     """
     router = APIRouter()
-    router.include_router(auth.router)
-    router.include_router(users.router)
-    router.include_router(files.router)
-    router.include_router(testing.router)
+    router.include_router(routes.router)
     return router
