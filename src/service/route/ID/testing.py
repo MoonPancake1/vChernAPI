@@ -21,11 +21,11 @@ async def main():
     """
     content = """
 <body>
-<form action="/files/uploadfile/" enctype="multipart/form-data" method="post">
+<form action="/id/files/uploadfile/" enctype="multipart/form-data" method="post">
 <input name="file" type="file">
 <input type="submit">
 </form>
-<form action="/files/uploadfiles/" enctype="multipart/form-data" method="post">
+<form action="/id/files/uploadfiles/" enctype="multipart/form-data" method="post">
 <input name="files" type="file" multiple>
 <input type="submit">
 </form>

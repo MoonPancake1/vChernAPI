@@ -4,8 +4,8 @@ from uuid import uuid4
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from src.service.utils import models, schemas, OAuth2
-from src.service.utils.OAuth2 import oauth2_scheme
+from src.service.utils.ID import models, OAuth2, schemas
+from src.service.utils.ID.OAuth2 import oauth2_scheme
 
 
 async def get_user(db: Session, user_id: int):
@@ -26,6 +26,13 @@ async def get_user_by_nickname(db: Session, nickname: str):
     :return: запись из базы данных о пользователе или None
     """
     return db.query(models.User).filter(models.User.nickname == nickname).first()
+
+
+async def get_user_by_uuid(db: Session, uuid: str):
+    """
+    Функция возвращает пользователя с определённыйм uuid
+    """
+    return db.query(models.User).filter(models.User.uuid_user == uuid).first()
 
 
 async def get_user_by_email(db: Session, email: str):
