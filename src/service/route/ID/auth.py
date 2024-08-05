@@ -182,13 +182,13 @@ async def login_for_access_token(
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"type": "access",
-              "sub": user.uuid_user},
+              "sub": user.uuid},
         expires_delta=access_token_expires
     )
     refresh_token_expires = timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
     refresh_token = create_refresh_token(
         data={"type": "refresh",
-              "sub": user.uuid_user}, expires_delta=refresh_token_expires
+              "sub": user.uuid}, expires_delta=refresh_token_expires
     )
 
     return schemas.Token(access_token=access_token,

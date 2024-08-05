@@ -16,7 +16,7 @@ class Projects(Base):
     realize_project = Column(Date)
     stack = Column(JSON)
     status = Column(String)
-    view = Column(Integer)
+    view = Column(Integer, default=0)
     link_logo = Column(String)
     github_link = Column(String)
     project_link = Column(String)

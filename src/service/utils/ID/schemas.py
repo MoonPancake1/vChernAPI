@@ -23,6 +23,7 @@ class UserCreate(UserBase):
     """
     Модель для создания записи в базе данных
     """
+    ip: str | None = None
     password: str
 
 
@@ -30,19 +31,22 @@ class User(BaseModel):
     """
     Модель для полного представления объекта в коде
     """
-    uuid_user: str
+    uuid: str
     nickname: str
     email: str
     is_active: bool = True
     is_admin: bool = False
     avatar: str
+    ip: str | None = None
 
     class Config:
         orm_mode = True
 
 
-class UserUpdate(UserBase):
+class UserUpdate(BaseModel):
     """
-
+    Update user data
     """
+    nickname: str | None = None
+    email: str | None = None
     avatar: str | None = None
