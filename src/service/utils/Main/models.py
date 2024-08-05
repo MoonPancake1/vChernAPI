@@ -16,7 +16,7 @@ class Projects(Base):
     realize_project = Column(Date)
     stack = Column(JSON)
     status = Column(String)
-    view = Column(Integer)
+    view = Column(Integer, default=0)
     link_logo = Column(String)
     github_link = Column(String)
     project_link = Column(String)
@@ -30,8 +30,8 @@ class Project_Grades(Base):
     __tablename__ = 'project_grades'
 
     id = Column(Integer, primary_key=True)
-    project_id = Column(Integer, ForeignKey('projects.id'))
-    user_uuid = Column(Integer, ForeignKey('users.uuid'))
+    project_id = Column(Integer)
+    user_uuid = Column(Integer)
     grade = Column(Integer)
 
 
@@ -43,6 +43,6 @@ class Project_Commetaries(Base):
     __tablename__ = 'project_commetaries'
 
     id = Column(Integer, primary_key=True)
-    project_id = Column(Integer, ForeignKey('projects.id'))
-    user_uuid = Column(Integer, ForeignKey('users.uuid'))
+    project_id = Column(Integer)
+    user_uuid = Column(Integer)
     comment = Column(String)

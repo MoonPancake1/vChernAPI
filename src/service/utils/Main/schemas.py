@@ -1,4 +1,5 @@
 from datetime import date
+from typing import Annotated
 
 from pydantic import BaseModel
 
@@ -14,7 +15,7 @@ class ProjectCreate(BaseModel):
     project_link: str | None = None
 
 
-class PreGetProject(BaseModel):
+class Project(BaseModel):
     id: int
     title: str
     description: str
@@ -27,5 +28,17 @@ class PreGetProject(BaseModel):
     project_link: str | None = None
 
 
-class GetProject(PreGetProject):
+class ProjectFull(Project):
     rate: float
+
+
+class ProjectUpdate(BaseModel):
+    title: str | None = None
+    description: str | None = None
+    realize_project: date | None = None
+    stack: dict | None = None
+    status: str | None = None
+    view: int | None = None
+    link_logo: str | None = None
+    github_link: str | None = None
+    project_link: str | None = None

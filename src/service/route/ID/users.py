@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import Depends, HTTPException, APIRouter
+from fastapi import Depends, HTTPException, APIRouter, Request
 from sqlalchemy.orm import Session
 
 from src.service.route.ID.auth import get_current_active_user
@@ -27,12 +27,13 @@ async def check_users(nickname: str | None = None,
 
 
 @router.post("/", response_model=schemas.User)
-async def create_user(
+async def create_user(request: Request,
         user: schemas.UserCreate, db: Session = Depends(get_db)):
     """
     Функция для создания пользователя в базе данных
     :param user: данные о пользователе в виде макета UserCreate
     :param db: активная сессия с базой данных
+    :param request: данные о запросе пользователя
     :return: ошибка (пользователь с почтой или никнеймом уже существует) или процесс создания
     пользователя
     """
@@ -42,6 +43,7 @@ async def create_user(
         raise HTTPException(status_code=400, detail="Почта уже привязана!")
     if db_user_nickname:
         raise HTTPException(status_code=400, detail="Никнейм уже существует")
+    user.ip = request.headers.get("X-Forwarded-For")
     return await crud.create_user(db=db, user=user)
 
 
@@ -77,7 +79,7 @@ async def read_user_me(
     return current_user
 
 
-@router.post("/me")
+@router.put("/me")
 async def update_user_me(
         current_user: Annotated[schemas.User, Depends(get_current_active_user)],
         new_user_data: schemas.UserUpdate,
@@ -101,6 +103,16 @@ async def update_user_me(
     if new_user_data.avatar:
         current_user.avatar = new_user_data.avatar
     await crud.update_user_data(db, current_user)
+    current_user = await crud.get_user_by_uuid(db, uuid=current_user.uuid)
+    current_user = schemas.User(
+        uuid=current_user.uuid,
+        nickname=current_user.nickname,
+        email=current_user.email,
+        is_active=current_user.is_active,
+        is_admin=current_user.is_admin,
+        avatar=current_user.avatar,
+        ip=current_user.ip,
+    )
     return {"user": current_user, "result": True}
 
 

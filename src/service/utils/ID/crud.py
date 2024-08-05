@@ -79,7 +79,8 @@ async def create_user(db: Session, user: schemas.UserCreate):
         uuid=uuid,
         email=user.email,
         nickname=user.nickname,
-        hashed_password=hashed_password
+        hashed_password=hashed_password,
+        ip=user.ip,
     )
     db.add(db_user)
     db.commit()
@@ -88,10 +89,10 @@ async def create_user(db: Session, user: schemas.UserCreate):
 
 
 async def update_user_data(db: Session,
-                           current_user: schemas.User) -> [bool, str]:
+                           current_user: schemas.UserUpdate) -> [bool, str]:
     user = db.query(models.User).filter(models.User.id == current_user.id).first()
     user.nickname = current_user.nickname
     user.email = current_user.email
     user.avatar = current_user.avatar
     db.commit()
-    return True
+    return user

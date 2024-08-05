@@ -12,7 +12,7 @@
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://vchern.me:5432/postgres</jdbc-url>
+      <jdbc-url>jdbc:postgresql://vchern.me:10800/postgres</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
     <data-source source="LOCAL" name="postgres@localhost" uuid="75c9ff49-ff55-4f8d-ba19-c0c075d82034">
