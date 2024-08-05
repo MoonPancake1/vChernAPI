@@ -25,14 +25,22 @@ async def get_project(project_id: int,
 async def update_project(token: str,
                          project: schemas.ProjectUpdate,
                          db: Session = Depends(get_db)):
-    return await crud.update_project(db, project)
+    check = await auth.check_permissions(token, [settings.OWNER])
+    if isinstance(check, bool):
+        if check:
+            return await crud.update_project(db, project)
+        else:
+            return HTTPException(status_code=403, detail="Not enough permissions")
+    else:
+        return check
+
 
 
 @router.delete("/{project_id}/{token}")
 async def delete_project(token: str,
                          project_id: int,
                          db: Session = Depends(get_db)):
-    check = auth.check_permissions(token, [settings.OWNER])
+    check = await auth.check_permissions(token, [settings.OWNER])
     if isinstance(check, bool):
         if check:
             return await crud.delete_project(db, project_id)
@@ -48,7 +56,7 @@ async def create_project(
         token: str,
         project: schemas.ProjectCreate,
         db: Session = Depends(get_db)):
-    check = auth.check_permissions(token, [settings.OWNER])
+    check = await auth.check_permissions(token, [settings.OWNER])
     if isinstance(check, bool):
         if check:
             return await crud.create_project(db=db, project=project)
