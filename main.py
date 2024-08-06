@@ -23,6 +23,9 @@ async def favicon():
 
 origins = [
     "https://id.vchern.me",
+    "https://vchern.me",
+    "http://localhost",
+    "http://localhost:3000",
 ]
 
 app.add_middleware(
