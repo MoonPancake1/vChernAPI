@@ -42,3 +42,19 @@ class ProjectUpdate(BaseModel):
     link_logo: str | None = None
     github_link: str | None = None
     project_link: str | None = None
+
+
+class User(BaseModel):
+    """
+    Модель для полного представления объекта в коде
+    """
+    uuid: str
+    nickname: str
+    email: str
+    is_active: bool = True
+    is_admin: bool = False
+    avatar: str
+    ip: str | None = None
+
+    class Config:
+        from_attributes = True

@@ -8,8 +8,8 @@ async def get_project_by_id(db: Session, project_id: int) -> schemas.Project:
     return db.query(models.Projects).filter(models.Projects.id == project_id).first()
 
 
-async def update_project(db: Session, new_project_data: schemas.ProjectUpdate) -> schemas.Project:
-    current_project = await get_project_by_id(db, new_project_data.id)
+async def update_project(db: Session, current_project: schemas.Project, new_project_data: schemas.ProjectUpdate) \
+        -> schemas.Project:
     if not current_project:
         raise HTTPException(status_code=404, detail="Project not found")
     if new_project_data.title:
