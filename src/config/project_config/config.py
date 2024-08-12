@@ -15,11 +15,6 @@ class Settings(BaseSettings):
     DB_HOST: str
     DB_NAME: str
     API_URL: str
-    OWNER: str
-    ADMINISTRATOR: str
-    MODERATOR: str
-    USER: str
-    GUEST: str
 
     model_config = SettingsConfigDict(env_file=".env")
 

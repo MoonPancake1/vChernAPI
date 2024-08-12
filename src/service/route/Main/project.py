@@ -1,14 +1,16 @@
+from typing import Annotated
+
 from fastapi import Depends, APIRouter, HTTPException
 from sqlalchemy.orm import Session
 
-from src.config.project_config.config import settings
-from src.service.utils.Main import schemas, crud, auth
+from src.service.route.ID.auth import get_current_active_user
+from src.service.utils.Main import schemas, crud
 from src.service.utils.db import get_db
 
 router = APIRouter(prefix="/projects", tags=["project"])
 
 
-@router.get("/{project_id}")
+@router.get("/{project_id/")
 async def get_project(project_id: int,
         db: Session = Depends(get_db)):
     project = await crud.get_project_by_id(db, project_id)
@@ -21,49 +23,52 @@ async def get_project(project_id: int,
     return await crud.update_project(db, project)
 
 
-@router.put("/{project_id}/{token}")
-async def update_project(token: str,
-                         project: schemas.ProjectUpdate,
+@router.put("/{project_id}/")
+async def update_project(current_user: Annotated[schemas.User, Depends(get_current_active_user)],
+                         project_id: int,
+                         new_project: schemas.ProjectUpdate,
                          db: Session = Depends(get_db)):
-    check = await auth.check_permissions(token, [settings.OWNER])
-    if isinstance(check, bool):
-        if check:
-            return await crud.update_project(db, project)
+    project = await crud.get_project_by_id(db, project_id=project_id)
+    if not project:
+        return HTTPException(status_code=404, detail="Проект не найден!")
+    if current_user:
+        if current_user.is_admin:
+            return await crud.update_project(db, project, new_project)
         else:
-            return HTTPException(status_code=403, detail="Not enough permissions")
+            return HTTPException(status_code=403, detail="Данный пользователь не обладает нужными правами доступа!")
     else:
-        return check
+        return HTTPException(status_code=404, detail="Пользователь не найден!")
 
 
-
-@router.delete("/{project_id}/{token}")
-async def delete_project(token: str,
+@router.delete("/{project_id}/")
+async def delete_project(current_user: Annotated[schemas.User, Depends(get_current_active_user)],
                          project_id: int,
                          db: Session = Depends(get_db)):
-    check = await auth.check_permissions(token, [settings.OWNER])
-    if isinstance(check, bool):
-        if check:
+    project = await crud.get_project_by_id(db, project_id=project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Проект не найден!")
+    if current_user:
+        if current_user.is_admin:
             return await crud.delete_project(db, project_id)
         else:
-            return HTTPException(status_code=403, detail="Not enough permissions")
+            return HTTPException(status_code=403, detail="Данный пользователь не обладает нужными правами доступа!")
     else:
-        return check
+        return HTTPException(status_code=404, detail="Пользователь не найден!")
 
 
 
-@router.post("/{token}")
+@router.post("/")
 async def create_project(
-        token: str,
+        current_user: Annotated[schemas.User, Depends(get_current_active_user)],
         project: schemas.ProjectCreate,
         db: Session = Depends(get_db)):
-    check = await auth.check_permissions(token, [settings.OWNER])
-    if isinstance(check, bool):
-        if check:
+    if current_user:
+        if current_user.is_admin:
             return await crud.create_project(db=db, project=project)
         else:
-            return HTTPException(status_code=403, detail="Not enough permissions")
+            return HTTPException(status_code=403, detail="Данный пользователь не обладает нужными правами доступа!")
     else:
-        return check
+        return HTTPException(status_code=404, detail="Пользователь не найден!")
 
 
 @router.get("/")

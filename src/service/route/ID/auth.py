@@ -40,12 +40,12 @@ async def get_current_user_by_token(token: Annotated[str, Depends(oauth2_scheme)
                                     db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
+        detail="Не удалось проверить учётные данные пользователя!",
         headers={"WWW-Authenticate": "Bearer"},
     )
     incorrect_token_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Invalid token type",
+        detail="Некорректный тип токена авторизации!",
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
@@ -142,7 +142,7 @@ async def get_current_active_user(
     :return: Если пользователь активен, то объект пользователя, иначе ошибку
     """
     if not current_user.is_active:
-        raise HTTPException(status_code=400, detail="Inactive user")
+        raise HTTPException(status_code=400, detail="Пользователь деактивирован!")
     return current_user
 
 
@@ -176,7 +176,7 @@ async def login_for_access_token(
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
+            detail="Неверный логин или пароль!",
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
