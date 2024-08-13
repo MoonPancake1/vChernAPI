@@ -10,7 +10,7 @@ from src.service.utils.db import get_db
 router = APIRouter(prefix="/projects", tags=["project"])
 
 
-@router.get("/{project_id/")
+@router.get("/{project_id}/")
 async def get_project(project_id: int,
         db: Session = Depends(get_db)):
     project = await crud.get_project_by_id(db, project_id)
