@@ -13,16 +13,16 @@ router = APIRouter(prefix="/projects", tags=["project"])
 @router.get("/{project_id}/")
 async def get_project(project_id: int,
         db: Session = Depends(get_db)):
-    project = await crud.get_project_by_id(db, project_id)
-    if not project:
-        raise HTTPException(status_code=404, detail="Project not found")
-    if not project.view:
-        project.view = 1
+    db_project = await crud.get_project_by_id(db, project_id)
+    if not db_project:
+        raise HTTPException(status_code=404, detail="Проект не найден!")
+    if not db_project.view:
+        db_project.view = 1
     else:
-        project.view += 1
+        db_project.view += 1
     db.commit()
-    db.refresh(project)
-    return project
+    db.refresh(db_project)
+    return db_project
 
 
 @router.put("/{project_id}/")
