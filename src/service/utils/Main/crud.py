@@ -50,7 +50,7 @@ async def delete_project(db: Session, project_id: int) -> dict[str, bool]:
 
 
 async def get_projects(db: Session, skip: int = 0, limit: int = 6):
-    return db.query(models.Projects).offset(skip).limit(limit).all()
+    return db.query(models.Projects).order_by(models.Projects.id).offset(skip).limit(limit).all()
 
 
 async def create_project(db: Session, project: schemas.ProjectCreate):
