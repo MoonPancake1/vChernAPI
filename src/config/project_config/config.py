@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     DB_HOST: str
     DB_NAME: str
     API_URL: str
+    # TEST DATA
+    TEST_DB_HOST: str
 
     model_config = SettingsConfigDict(env_file=".env")
 
@@ -23,6 +25,9 @@ class DataBaseSettings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
+    # TEST DATA
+    TEST_POSTGRES_USER: str
+    TEST_POSTGRES_PASSWORD: str
 
     model_config = SettingsConfigDict(env_file=".env.db")
 

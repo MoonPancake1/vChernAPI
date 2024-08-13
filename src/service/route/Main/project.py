@@ -10,7 +10,7 @@ from src.service.utils.db import get_db
 router = APIRouter(prefix="/projects", tags=["project"])
 
 
-@router.get("/{project_id/")
+@router.get("/{project_id}/")
 async def get_project(project_id: int,
         db: Session = Depends(get_db)):
     project = await crud.get_project_by_id(db, project_id)
@@ -20,7 +20,9 @@ async def get_project(project_id: int,
         project.view = 1
     else:
         project.view += 1
-    return await crud.update_project(db, project)
+    db.commit()
+    db.refresh(project)
+    return project
 
 
 @router.put("/{project_id}/")
@@ -72,5 +74,6 @@ async def create_project(
 
 
 @router.get("/")
-async def get_projects(db: Session = Depends(get_db)):
-    return await crud.get_projects(db=db)
+async def get_projects(db: Session = Depends(get_db),
+                       skip: int = 0, limit: int = 6):
+    return await crud.get_projects(db=db, skip=skip, limit=limit)

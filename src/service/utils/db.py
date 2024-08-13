@@ -6,10 +6,11 @@ from sqlalchemy.orm import sessionmaker, DeclarativeBase, mapped_column, Mapped,
 from src.config.project_config.config import settings, database
 
 if settings.DEBUG:
-    SQLALCHEMY_DATABASE_URL = "sqlite:///./vChernTestDB.db"
+    SQLALCHEMY_DATABASE_URL = f"{settings.DB_ENGINE}://{database.TEST_POSTGRES_USER}:{database.TEST_POSTGRES_PASSWORD}@" + \
+                               f"{settings.TEST_DB_HOST}/{database.POSTGRES_DB}"
 else:
-    SQLALCHEMY_DATABASE_URL = f"{settings.DB_ENGINE}://{database.POSTGRES_USER}:{database.POSTGRES_PASSWORD}@{settings.DB_HOST}/" + \
-                              f"{database.POSTGRES_DB}"
+    SQLALCHEMY_DATABASE_URL = f"{settings.DB_ENGINE}://{database.POSTGRES_USER}:{database.POSTGRES_PASSWORD}@" + \
+                               f"{settings.DB_HOST}/{database.POSTGRES_DB}"
 
 # SQLALCHEMY_DATABASE_URL = f"{settings.DB_ENGINE}://{database.POSTGRES_USER}:{database.POSTGRES_PASSWORD}@{settings.DB_HOST}/" + \
 #                               f"{database.POSTGRES_DB}"

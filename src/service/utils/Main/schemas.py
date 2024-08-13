@@ -58,3 +58,20 @@ class User(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class GradeCreate(BaseModel):
+    project_id: int
+    grade: int
+
+
+class GradeUpdate(BaseModel):
+    grade_id: int
+    grade: int
+
+
+class Grade(GradeCreate):
+    user_uuid: str
+
+class Grades(GradeCreate):
+    pass
