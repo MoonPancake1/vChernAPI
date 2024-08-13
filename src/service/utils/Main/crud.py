@@ -1,8 +1,13 @@
+from typing import List, Type
+
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from src.service.utils.Main import models, schemas
+from src.service.utils.Main.models import Project_Grades
 
+
+# PROJECT
 
 async def get_project_by_id(db: Session, project_id: int) -> schemas.Project:
     return db.query(models.Projects).filter(models.Projects.id == project_id).first()
@@ -44,8 +49,8 @@ async def delete_project(db: Session, project_id: int) -> dict[str, bool]:
     return {'result': True}
 
 
-async def get_projects(db: Session):
-    return db.query(models.Projects).all()
+async def get_projects(db: Session, skip: int = 0, limit: int = 6):
+    return db.query(models.Projects).offset(skip).limit(limit).all()
 
 
 async def create_project(db: Session, project: schemas.ProjectCreate):
@@ -71,3 +76,46 @@ async def create_project(db: Session, project: schemas.ProjectCreate):
     db.commit()
     db.refresh(db_project)
     return db_project
+
+
+# GRADES
+
+
+async def get_grade_by_id(db: Session, grade_id: int):
+    return db.query(models.Project_Grades).filter_by(id=grade_id).first()
+
+
+async def get_grades_project_by_id(db: Session, project_id: int):
+    return db.query(models.Project_Grades).filter_by(project_id=project_id).all()
+
+
+async def create_grade_project(db: Session, grade: schemas.GradeCreate, user: schemas.User):
+    db_grade = models.Project_Grades(
+        project_id=grade.project_id,
+        user_uuid=user.uuid,
+        grade=grade.grade,
+    )
+    db.add(db_grade)
+    db.commit()
+    db.refresh(db_grade)
+    print(db_grade)
+    return db_grade
+
+
+async def update_grade(db: Session, grade: schemas.Grade, new_grade: schemas.GradeUpdate):
+    try:
+        grade.grade = new_grade.grade
+        db.commit()
+        db.refresh(grade)
+        return grade
+    except Exception as e:
+        return {'result': False, 'detail': str(e)}
+
+
+async def delete_grade_by_id(db: Session, grade: schemas.Grade):
+    try:
+        db.delete(grade)
+        db.commit()
+        return {'result': True}
+    except Exception as e:
+        return {'result': False, 'detail': str(e)}

@@ -72,5 +72,6 @@ async def create_project(
 
 
 @router.get("/")
-async def get_projects(db: Session = Depends(get_db)):
-    return await crud.get_projects(db=db)
+async def get_projects(db: Session = Depends(get_db),
+                       skip: int = 0, limit: int = 6):
+    return await crud.get_projects(db=db, skip=skip, limit=limit)

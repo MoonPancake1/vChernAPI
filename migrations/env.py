@@ -20,7 +20,8 @@ if not settings.DEBUG:
                                f"{settings.DB_HOST}/{database.POSTGRES_DB}")
     config.set_section_option(section, "DATABASE_URI", SQLALCHEMY_DATABASE_URL)
 else:
-    SQLALCHEMY_DATABASE_URL = "sqlite:///./vChernTestDB.db"
+    SQLALCHEMY_DATABASE_URL = f"{settings.DB_ENGINE}://{database.TEST_POSTGRES_USER}:{database.TEST_POSTGRES_PASSWORD}@" + \
+        f"{settings.TEST_DB_HOST}/{database.POSTGRES_DB}"
     config.set_section_option(section, "DATABASE_URI", SQLALCHEMY_DATABASE_URL)
 
 # Interpret the config file for Python logging.

@@ -31,7 +31,7 @@ class Project_Grades(Base):
 
     id = Column(Integer, primary_key=True)
     project_id = Column(Integer)
-    user_uuid = Column(Integer)
+    user_uuid = Column(String)
     grade = Column(Integer)
 
 
