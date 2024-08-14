@@ -44,5 +44,5 @@ class Project_Commetaries(Base):
 
     id = Column(Integer, primary_key=True)
     project_id = Column(Integer)
-    user_uuid = Column(Integer)
+    user_uuid = Column(String)
     comment = Column(String)
