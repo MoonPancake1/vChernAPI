@@ -43,7 +43,7 @@ async def create_user(request: Request,
         raise HTTPException(status_code=400, detail="Почта уже привязана!")
     if db_user_nickname:
         raise HTTPException(status_code=400, detail="Никнейм уже существует")
-    user.ip = request.headers.get("X-Forwarded-For")
+    user.ip = request.client.host
     return await crud.create_user(db=db, user=user)
 
 
