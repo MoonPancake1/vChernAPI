@@ -18,6 +18,10 @@ async def create_grade(current_user: Annotated[schemas.User, Depends(get_current
     project = await crud.get_project_by_id(db, grade.project_id)
     if not project:
         return HTTPException(status_code=404, detail="Проект не найден!")
+    grades = await crud.get_grades_project_by_id(db, project.id)
+    for grade in grades:
+        if grade.user_uuid == current_user.uuid:
+            return HTTPException(status_code=403, detail="Пользователь может поставить только 1 оценку!")
     grade = await crud.create_grade_project(db, grade, current_user)
     return grade
 
@@ -53,3 +57,15 @@ async def delete_grade(current_user: Annotated[schemas.User, Depends(get_current
         return await crud.delete_grade_by_id(db, grade)
     else:
         return HTTPException(status_code=403, detail="Данный пользователь не обладает нужными правами доступа!")
+
+
+@router.get("/rate_project/{project_id}/}")
+async def calc_rate_project(project_id: int,
+                            db: Session = Depends(get_db)):
+    project = await crud.get_project_by_id(db, project_id)
+    if not project:
+        return HTTPException(status_code=404, detail="Проект не найден!")
+    grades = await crud.get_grades_project_by_id(db, project.id)
+    rate = [grade.grade for grade in grades]
+    return round(sum(rate) / len(rate), 1)
+

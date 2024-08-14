@@ -98,7 +98,6 @@ async def create_grade_project(db: Session, grade: schemas.GradeCreate, user: sc
     db.add(db_grade)
     db.commit()
     db.refresh(db_grade)
-    print(db_grade)
     return db_grade
 
 
@@ -115,6 +114,48 @@ async def update_grade(db: Session, grade: schemas.Grade, new_grade: schemas.Gra
 async def delete_grade_by_id(db: Session, grade: schemas.Grade):
     try:
         db.delete(grade)
+        db.commit()
+        return {'result': True}
+    except Exception as e:
+        return {'result': False, 'detail': str(e)}
+
+
+# COMMENTS
+
+
+async def get_comment_by_id(db: Session, comment_id: int):
+    return db.query(models.Project_Commetaries).filter_by(id=comment_id).first()
+
+
+async def get_comments(db: Session, project_id: int):
+    return db.query(models.Project_Commetaries).filter_by(project_id=project_id).order_by(id).all()
+
+
+async def create_comment(db: Session, comment: schemas.CommentCreate, user: schemas.User):
+    db_comment = models.Project_Commetaries(
+        project_id=comment.project_id,
+        user_uuid=user.uuid,
+        comment=comment.comment,
+    )
+    db.add(db_comment)
+    db.commit()
+    db.refresh(db_comment)
+    return db_comment
+
+
+async def update_comment(db: Session, comment: schemas.Comment, new_comment: schemas.CommentUpdate):
+    try:
+        comment.comment = new_comment.comment
+        db.commit()
+        db.refresh(comment)
+        return comment
+    except Exception as e:
+        return {'result': False, 'detail': str(e)}
+
+
+async def delete_comment_by_id(db: Session, comment: schemas.Comment):
+    try:
+        db.delete(comment)
         db.commit()
         return {'result': True}
     except Exception as e:

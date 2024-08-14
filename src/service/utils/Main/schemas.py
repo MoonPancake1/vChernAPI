@@ -4,6 +4,8 @@ from typing import Annotated
 from pydantic import BaseModel
 
 
+# Project
+
 class ProjectCreate(BaseModel):
     title: str
     description: str
@@ -44,6 +46,8 @@ class ProjectUpdate(BaseModel):
     project_link: str | None = None
 
 
+# User
+
 class User(BaseModel):
     """
     Модель для полного представления объекта в коде
@@ -60,6 +64,8 @@ class User(BaseModel):
         from_attributes = True
 
 
+# Grades
+
 class GradeCreate(BaseModel):
     project_id: int
     grade: int
@@ -74,4 +80,24 @@ class Grade(GradeCreate):
     user_uuid: str
 
 class Grades(GradeCreate):
+    pass
+
+
+# Comment
+
+class CommentCreate(BaseModel):
+    project_id: int
+    comment: str
+
+
+class CommentUpdate(BaseModel):
+    comment_id: int
+    comment: str
+
+
+class Comment(BaseModel):
+    user_uuid: int
+
+
+class Comments(CommentCreate):
     pass
