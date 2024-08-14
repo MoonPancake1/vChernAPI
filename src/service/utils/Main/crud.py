@@ -1,16 +1,19 @@
-from typing import List, Type
-
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from src.service.utils.Main import models, schemas
-from src.service.utils.Main.models import Project_Grades
+from src.service.utils.Main.utils import calc_rate
 
 
 # PROJECT
 
-async def get_project_by_id(db: Session, project_id: int) -> schemas.Project:
-    return db.query(models.Projects).filter(models.Projects.id == project_id).first()
+async def get_project_by_id(db: Session, project_id: int) -> schemas.ProjectFull:
+    project = db.query(models.Projects).filter(models.Projects.id == project_id).first()
+    if not project:
+        raise HTTPException(status_code=404, detail="Проект не найден!")
+    grades = await get_grades_project_by_id(db, project.id)
+    project.rate = calc_rate(grades)
+    return project
 
 
 async def update_project(db: Session, current_project: schemas.Project, new_project_data: schemas.ProjectUpdate) \
@@ -50,7 +53,11 @@ async def delete_project(db: Session, project_id: int) -> dict[str, bool]:
 
 
 async def get_projects(db: Session, skip: int = 0, limit: int = 6):
-    return db.query(models.Projects).order_by(models.Projects.id).offset(skip).limit(limit).all()
+    projects = db.query(models.Projects).order_by(models.Projects.id).offset(skip).limit(limit).all()
+    for project in projects:
+        grade = await get_grades_project_by_id(db, project.id)
+        project.rate = calc_rate(grade)
+    return projects
 
 
 async def create_project(db: Session, project: schemas.ProjectCreate):

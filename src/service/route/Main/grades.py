@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from src.service.route.ID.auth import get_current_active_user
 from src.service.utils.Main import schemas, crud
+from src.service.utils.Main.utils import calc_rate
 from src.service.utils.db import get_db
 
 
@@ -53,6 +54,8 @@ async def delete_grade(current_user: Annotated[schemas.User, Depends(get_current
                        grade_id: int,
                        db: Session = Depends(get_db)):
     grade = await crud.get_grade_by_id(db, grade_id)
+    if not grade:
+        raise HTTPException(status_code=404, detail="Оценка не найдена!")
     if grade.user_uuid == current_user.uuid or current_user.is_admin:
         return await crud.delete_grade_by_id(db, grade)
     else:
@@ -66,6 +69,6 @@ async def calc_rate_project(project_id: int,
     if not project:
         return HTTPException(status_code=404, detail="Проект не найден!")
     grades = await crud.get_grades_project_by_id(db, project.id)
-    rate = [grade.grade for grade in grades]
-    return round(sum(rate) / len(rate), 1)
+    rate = calc_rate(grades)
+    return {'project_id': project.id, 'rate': rate}
 
