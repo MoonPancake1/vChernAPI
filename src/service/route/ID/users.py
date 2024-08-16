@@ -63,7 +63,7 @@ async def read_users(
     if current_user.is_admin:
         users = await crud.get_users(db, skip=skip, limit=limit)
         return users
-    return {"detail": "Current user is not admin"}
+    raise HTTPException(status_code=403, detail="Данный пользователь не обладает нужными правами доступа!")
 
 
 @router.get("/me")

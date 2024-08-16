@@ -32,14 +32,14 @@ async def update_project(current_user: Annotated[schemas.User, Depends(get_curre
                          db: Session = Depends(get_db)):
     project = await crud.get_project_by_id(db, project_id=project_id)
     if not project:
-        return HTTPException(status_code=404, detail="Проект не найден!")
+        raise HTTPException(status_code=404, detail="Проект не найден!")
     if current_user:
         if current_user.is_admin:
             return await crud.update_project(db, project, new_project)
         else:
-            return HTTPException(status_code=403, detail="Данный пользователь не обладает нужными правами доступа!")
+            raise HTTPException(status_code=403, detail="Данный пользователь не обладает нужными правами доступа!")
     else:
-        return HTTPException(status_code=404, detail="Пользователь не найден!")
+        raise HTTPException(status_code=404, detail="Пользователь не найден!")
 
 
 @router.delete("/{project_id}/")
@@ -53,9 +53,9 @@ async def delete_project(current_user: Annotated[schemas.User, Depends(get_curre
         if current_user.is_admin:
             return await crud.delete_project(db, project_id)
         else:
-            return HTTPException(status_code=403, detail="Данный пользователь не обладает нужными правами доступа!")
+            raise HTTPException(status_code=403, detail="Данный пользователь не обладает нужными правами доступа!")
     else:
-        return HTTPException(status_code=404, detail="Пользователь не найден!")
+        raise HTTPException(status_code=404, detail="Пользователь не найден!")
 
 
 
@@ -68,9 +68,9 @@ async def create_project(
         if current_user.is_admin:
             return await crud.create_project(db=db, project=project)
         else:
-            return HTTPException(status_code=403, detail="Данный пользователь не обладает нужными правами доступа!")
+            raise HTTPException(status_code=403, detail="Данный пользователь не обладает нужными правами доступа!")
     else:
-        return HTTPException(status_code=404, detail="Пользователь не найден!")
+        raise HTTPException(status_code=404, detail="Пользователь не найден!")
 
 
 @router.get("/")

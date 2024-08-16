@@ -46,3 +46,20 @@ class Project_Commetaries(Base):
     project_id = Column(Integer)
     user_uuid = Column(String)
     comment = Column(String)
+
+
+class Achievements(Base):
+    """
+    Модель для достижений
+    """
+
+    __tablename__ = 'achievements'
+
+    id = Column(Integer, primary_key=True)
+    course = Column(String)
+    type = Column(String)
+    company = Column(String)
+    link = Column(String)
+    rate = Column(String)
+    year = Column(Date)
+

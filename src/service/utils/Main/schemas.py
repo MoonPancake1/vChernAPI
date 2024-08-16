@@ -101,3 +101,25 @@ class Comment(BaseModel):
 
 class Comments(CommentCreate):
     pass
+
+
+class AchievementCreate(BaseModel):
+    course: str
+    type: str
+    company: str
+    link: str
+    rate: str
+    year: date
+
+
+class Achievement(AchievementCreate):
+    pass
+
+
+class AchievementUpdate(BaseModel):
+    course: str | None = None
+    type: str | None = None
+    company: str | None = None
+    link: str | None = None
+    rate: str | None = None
+    year: date | None = None
