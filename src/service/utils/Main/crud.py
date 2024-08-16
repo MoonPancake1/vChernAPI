@@ -167,3 +167,57 @@ async def delete_comment_by_id(db: Session, comment: schemas.Comment):
         return {'result': True}
     except Exception as e:
         return {'result': False, 'detail': str(e)}
+
+
+# ACHIEVEMENTS
+
+
+async def create_achievement(db: Session, achievement: schemas.AchievementCreate):
+    db_achievement = models.Achievements(
+        course=achievement.course,
+        type=achievement.type,
+        company=achievement.company,
+        link=achievement.link,
+        rate=achievement.rate,
+        year=achievement.year
+    )
+    db.add(db_achievement)
+    db.commit()
+    db.refresh(db_achievement)
+    return db_achievement
+
+
+async def get_achievements(db: Session):
+    return db.query(models.Achievements).all()
+
+
+async def get_achievement_by_id(db: Session, achievement_id: int) -> schemas.Achievement:
+    achievement = db.query(models.Achievements).filter_by(id=achievement_id).first()
+    if not achievement:
+        raise HTTPException(status_code=404, detail='Достижение не найдено!')
+    return achievement
+
+
+async def update_achievement(db: Session, achievement: schemas.Achievement,
+                             new_achievement: schemas.AchievementUpdate):
+    try:
+        achievement.course = new_achievement.course if new_achievement.course else achievement.course
+        achievement.type = new_achievement.type if new_achievement.type else achievement.type
+        achievement.company = new_achievement.company if new_achievement.company else achievement.company
+        achievement.link = new_achievement.link if new_achievement.link else achievement.link
+        achievement.rate = new_achievement.rate if new_achievement.rate else achievement.rate
+        achievement.year = new_achievement.year if new_achievement.year else achievement.year
+        db.commit()
+        db.refresh(achievement)
+        return achievement
+    except Exception as e:
+        return {'result': False, 'detail': str(e)}
+
+
+async def delete_achievement_by_id(db: Session, achievement: schemas.Achievement):
+    try:
+        db.delete(achievement)
+        db.commit()
+        return {'result': True}
+    except Exception as e:
+        return {'result': False, 'detail': str(e)}
