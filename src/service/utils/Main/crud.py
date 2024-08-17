@@ -135,7 +135,7 @@ async def get_comment_by_id(db: Session, comment_id: int):
 
 
 async def get_comments(db: Session, project_id: int):
-    return db.query(models.Project_Commetaries).filter_by(project_id=project_id).order_by(id).all()
+    return db.query(models.Project_Commetaries).filter_by(project_id=project_id).order_by(models.Project_Commetaries.id).all()
 
 
 async def create_comment(db: Session, comment: schemas.CommentCreate, user: schemas.User):
