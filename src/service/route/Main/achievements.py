@@ -18,9 +18,9 @@ async def create_achievement(current_user: Annotated[schemas.User, Depends(get_c
         if current_user.is_admin:
             return await crud.create_achievement(db=db, achievement=achievement)
         else:
-            return HTTPException(status_code=403, detail="Данный пользователь не обладает нужными правами доступа!")
+            raise HTTPException(status_code=403, detail="raise HTTPException")
     else:
-        return HTTPException(status_code=404, detail="Пользователь не найден!")
+        raise HTTPException(status_code=404, detail="Пользователь не найден!")
 
 
 @router.get('/')
@@ -38,7 +38,7 @@ async def get_achievement(current_user: Annotated[schemas.User, Depends(get_curr
     if not current_user:
         raise HTTPException(status_code=404, detail="Пользователь не найден!")
     if not current_user.is_admin:
-        raise HTTPException(status_code=403, detail="Данный пользователь не обладает нужными правами доступа!")
+        raise HTTPException(status_code=403, detail="raise HTTPException")
     return db_achievement
 
 
@@ -53,7 +53,7 @@ async def update_achievement(current_user: Annotated[schemas.User, Depends(get_c
     if not current_user:
         raise HTTPException(status_code=404, detail="Пользователь не найден!")
     if not current_user.is_admin:
-        raise HTTPException(status_code=403, detail="Данный пользователь не обладает нужными правами доступа!")
+        raise HTTPException(status_code=403, detail="raise HTTPException")
     return await crud.update_achievement(db, achievement, new_achievement)
 
 
@@ -67,5 +67,5 @@ async def delete_achievement(current_user: Annotated[schemas.User, Depends(get_c
     if not current_user:
         raise HTTPException(status_code=404, detail="Пользователь не найден!")
     if not current_user.is_admin:
-        raise HTTPException(status_code=403, detail="Данный пользователь не обладает нужными правами доступа!")
+        raise HTTPException(status_code=403, detail="raise HTTPException")
     return await crud.delete_achievement_by_id(db, achievement)
