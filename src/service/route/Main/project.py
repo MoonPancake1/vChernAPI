@@ -18,7 +18,7 @@ async def get_all_tech(db: Session = Depends(get_db)):
         for tech in project.stack.keys():
             update_tech = list(map(lambda x: x.lower(), project.stack[tech]))
             techs += update_tech
-    techs = list(set(techs))
+    techs = sorted(list(set(techs)))
     return techs
 
 
