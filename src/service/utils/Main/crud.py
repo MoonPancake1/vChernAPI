@@ -52,8 +52,8 @@ async def delete_project(db: Session, project_id: int) -> dict[str, bool]:
     return {'result': True}
 
 
-async def get_projects(db: Session, skip: int = 0, limit: int = 6):
-    projects = db.query(models.Projects).order_by(models.Projects.id).offset(skip).limit(limit).all()
+async def get_projects(db: Session):
+    projects = db.query(models.Projects).order_by(models.Projects.id).all()
     for project in projects:
         grade = await get_grades_project_by_id(db, project.id)
         project.rate = calc_rate(grade)

@@ -62,7 +62,7 @@ async def delete_grade(current_user: Annotated[schemas.User, Depends(get_current
         raise HTTPException(status_code=403, detail="Данный пользователь не обладает нужными правами доступа!")
 
 
-@router.get("/rate_project/{project_id}/}")
+@router.get("/rate_project/{project_id}/")
 async def calc_rate_project(project_id: int,
                             db: Session = Depends(get_db)):
     project = await crud.get_project_by_id(db, project_id)
