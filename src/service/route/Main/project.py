@@ -10,6 +10,18 @@ from src.service.utils.db import get_db
 router = APIRouter(prefix="/projects", tags=["project"])
 
 
+@router.get("/all_tech/")
+async def get_all_tech(db: Session = Depends(get_db)):
+    projects = await crud.get_projects(db=db)
+    techs = []
+    for project in projects:
+        for tech in project.stack.keys():
+            update_tech = list(map(lambda x: x.lower(), project.stack[tech]))
+            techs += update_tech
+    techs = list(set(techs))
+    return techs
+
+
 @router.get("/{project_id}/")
 async def get_project(project_id: int,
         db: Session = Depends(get_db)):
@@ -74,6 +86,6 @@ async def create_project(
 
 
 @router.get("/")
-async def get_projects(db: Session = Depends(get_db),
-                       skip: int = 0, limit: int = 6):
-    return await crud.get_projects(db=db, skip=skip, limit=limit)
+async def get_projects(db: Session = Depends(get_db)):
+    return await crud.get_projects(db=db)
+
