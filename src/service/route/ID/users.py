@@ -117,15 +117,15 @@ async def update_user_me(
 
 
 
-@router.get("/get/{user_id}", response_model=schemas.User)
-async def read_user(user_id: int, db: Session = Depends(get_db)):
+@router.get("/get_user/{user_uuid}", response_model=schemas.User)
+async def read_user(user_uuid: str, db: Session = Depends(get_db)):
     """
     Функция для просмотра данных о пользователя с определённым id
     :param user_id: пользовательский id
     :param db: активная сессия с базой данных
     :return: найденных пользователь по schemas.User или ошибка (пользователь не найден)
     """
-    db_user = await crud.get_user(db, user_id=user_id)
+    db_user = await crud.get_user_by_uuid(db, uuid=user_uuid)
     if db_user is None:
         raise HTTPException(status_code=404, detail="Пользователя не существует!")
     return db_user
