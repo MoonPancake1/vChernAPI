@@ -27,9 +27,9 @@ class UserCreate(UserBase):
     password: str
 
 
-class User(BaseModel):
+class UserBase(BaseModel):
     """
-    Модель для полного представления объекта в коде
+    Модель для базового представления объекта в коде
     """
     uuid: str
     nickname: str
@@ -37,10 +37,15 @@ class User(BaseModel):
     is_active: bool = True
     is_admin: bool = False
     avatar: str
-    ip: str | None = None
 
     class Config:
         from_attributes = True
+
+class User(UserBase):
+    """
+    Модель для полного представления объекта в коде
+    """
+    ip: str | None = None
 
 
 class UserUpdate(BaseModel):
