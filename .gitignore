@@ -279,5 +279,4 @@ $RECYCLE.BIN/
 
 vChernTestDB.db
 *.env*
-static
 update-script
