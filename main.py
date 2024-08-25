@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from starlette.middleware.cors import CORSMiddleware
+# from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import FileResponse
 
 from src.config.project_config.config import settings
@@ -21,20 +21,20 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 async def favicon():
     return FileResponse('vChernID.ico')
 
-origins = [
-    # "https://id.vchern.me",
-    # "https://vchern.me",
-    # "http://localhost",
-    # "http://localhost:3000",
-    "*",
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# origins = [
+#     # "https://id.vchern.me",
+#     # "https://vchern.me",
+#     # "http://localhost",
+#     # "http://localhost:3000",
+#     "*",
+# ]
+#
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=origins,
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 
 app.include_router(get_apps_router()) # включение маршрутизатора в основное приложение
