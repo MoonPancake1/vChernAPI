@@ -15,8 +15,9 @@ class Settings(BaseSettings):
     DB_HOST: str
     DB_NAME: str
     API_URL: str
-    # TEST DATA
     TEST_DB_HOST: str
+    PROD_TELEGRAM_BOT_TOKEN: str
+    DEVELOP_TELEGRAM_BOT_TOKEN: str
 
     model_config = SettingsConfigDict(env_file=".env")
 

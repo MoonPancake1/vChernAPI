@@ -2,15 +2,17 @@ from datetime import datetime, timezone, timedelta
 from typing import Annotated
 
 import jwt
-from fastapi import Depends, HTTPException, APIRouter, status
+from fastapi import Depends, HTTPException, APIRouter, status, Request
 from fastapi.security import OAuth2PasswordRequestForm, HTTPBearer
 from sqlalchemy.orm import Session
 from jwt.exceptions import InvalidTokenError
+from fastapi.responses import HTMLResponse
 
 from src.config.project_config.config import settings
 from src.service.utils.ID import schemas, crud
 from src.service.utils.ID.OAuth2 import oauth2_scheme, verify_password
 from src.service.utils.db import get_db
+from src.templates.template_init import templates
 
 http_bearer = HTTPBearer(auto_error=False)
 
@@ -193,3 +195,10 @@ async def login_for_access_token(
 
     return schemas.Token(access_token=access_token,
                          refresh_token=refresh_token, )
+
+
+@router.get("/", response_class=HTMLResponse)
+async def form_for_auth(request: Request):
+    return templates.TemplateResponse(
+        request=request, name="login_page.html"
+    )

@@ -1,4 +1,4 @@
-# vC.ID && vC.Main API v.0.0.4.12
+# vC.ID && vC.Main API v.0.0.4.13
 Автор: Чернышев Владислав
 
 ## О проекте:
@@ -11,28 +11,51 @@
 1. Склонировать репозиторий
 2. Создать виртуальное окружение командой: ```python3 -m venv *название окружения*```
 3. Установить все зависимости: ```pip install -r requirements.txt```
-4. Создать в папке проекта файл .env
-5. Добавить следующие переменные в этот файл:
-  - PROJECT_NAME (название проекта)
-  - DEBUG (отладка)
-  - VERSION (версия приложения)
-  - SECRET_KEY (секретный ключ)
-  - ALGORITHM (алгоритм шифрования рекомендация:
-"HS256")
-  - ACCESS_TOKEN_EXPIRE_MINUTES (сколько минут 
-будет доступен токен авторизации пользователя)
-  - DB_ENGINE (движок базы данных)
-  - DB_USER (пользователь базы данных)
-  - DB_PASSWORD (пароль пользователя)
-  - DB_HOST (хост для подключения)
-  - DB_NAME (название базы данных)
-  - API_URL (путь до api)
-6. Запустить проект командой: ```uvicorn main:app --reload```
-7. Создать миграцию: ```alembic revision --autogenerate -m "Name revision"```
-8. Произвести миграцию: ```alembic upgrade REVISION```
+4. Создать в папке проекта файл .env и .env.db
+5. Добавить следующие переменные в .env:
+```
+# Project Settings
+PROJECT_NAME
+DEBUG
+VERSION
+SECRET_KEY
+ALGORITHM
+ACCESS_TOKEN_EXPIRE_MINUTES
+REFRESH_TOKEN_EXPIRE_DAYS
+
+# DB Settings
+DB_ENGINE
+DB_USER
+DB_PASSWORD
+DB_HOST
+TEST_DB_HOST
+DB_NAME
+
+# API Settings
+API_URL
+
+# Telegram OAuth2
+PROD_TELEGRAM_BOT_TOKEN
+DEVELOP_TELEGRAM_BOT_TOKEN
+```
+6. Добавить следующие переменные в .env.db:
+```
+POSTGRES_USER
+POSTGRES_PASSWORD
+POSTGRES_DB
+TEST_POSTGRES_USER
+TEST_POSTGRES_PASSWORD
+```
+7. Запустить проект командой: ```uvicorn main:app --reload```
+8. Создать миграцию: ```alembic revision --autogenerate -m "Name revision"```
+9. Произвести миграцию: ```alembic upgrade REVISION```
 
 
 ## Обновления:
+
+- vC.ID && vC.Main API **v.0.0.4.13**:
+Добавлен новый endpoint /id/login/ и
+тестирование авторизации через telegram
 
 - vC.ID && vC.Main API **v.0.0.4.12**:
 Изменена CORS политика для тестирования

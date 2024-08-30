@@ -117,7 +117,7 @@ async def update_user_me(
 
 
 
-@router.get("/get_user/{user_uuid}", response_model=schemas.User)
+@router.get("/get_user/", response_model=schemas.User)
 async def read_user(user_uuid: str, db: Session = Depends(get_db)):
     """
     Функция для просмотра данных о пользователя с определённым id
