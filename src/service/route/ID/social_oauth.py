@@ -10,7 +10,7 @@ from src.service.utils.db import get_db
 
 BOT_TOKEN_HASH = hashlib.sha256(settings.PROD_TELEGRAM_BOT_TOKEN.encode())
 http_bearer = HTTPBearer(auto_error=False)
-router = APIRouter(prefix="/oauth/",
+router = APIRouter(prefix="/oauth",
                    tags=["oauth"],
                    dependencies=[Depends(http_bearer)])
 
@@ -24,23 +24,26 @@ router = APIRouter(prefix="/oauth/",
 # hash=a3ce3852544a5830f5db75a0ad8a94ed59a2e40d99ebe1311df6e6e19e92b6b9
 
 @router.post("/telegram/", response_model=schemas.User)
-async def create_user(user_tg: schemas.UserCreateTelegram,
-                      request: Request,
+async def create_user(id: int,
+                      first_name: str,
+                      username: str,
+                      photo_url: str,
+                      auth_date: int,
+                      hash: str,
                       db: Session = Depends(get_db)):
-    """
-    Функция для создания пользователя в базе данных
-    :param user_tg: данные о пользователе в виде макета UserCreate
-    :param db: активная сессия с базой данных
-    :param request: данные о запросе пользователя
-    :return: ошибка (пользователь с почтой или никнеймом уже существует) или процесс создания
-    пользователя
-    """
-    cp_user_tg = user_tg.copy()
+    cp_user_tg = schemas.UserCreateTelegram(
+        id=id,
+        first_name=first_name,
+        username=username,
+        photo_url=photo_url,
+        auth_date=auth_date,
+        hash=hash
+    )
     if cp_user_tg.username:
         query_hash = cp_user_tg.hash
         data_check_string = '\n'.join(
-            sorted(f'{x}={y}' for x, y in cp_user_tg if x not in
-            ('hash', 'next')))
+            sorted(f'{x}={y}' for x, y in cp_user_tg if x not in ('hash', 'next'))
+        )
         computed_hash = hmac.new(
             BOT_TOKEN_HASH.digest(),
             data_check_string.encode(),
