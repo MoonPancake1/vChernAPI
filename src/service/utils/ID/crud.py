@@ -98,7 +98,7 @@ async def update_user_data(db: Session,
     return user
 
 
-async def create_user_telegram(db: Session, user_tg: schemas.UserCreateTelegram):
+async def create_user_telegram(db: Session, user_tg: schemas.UserTelegram):
     db_user = models.User(
         uuid=user_tg.id,
         nickname=user_tg.username,
