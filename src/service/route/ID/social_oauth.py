@@ -23,7 +23,7 @@ router = APIRouter(prefix="/oauth",
 # auth_date=1725012189
 # hash=a3ce3852544a5830f5db75a0ad8a94ed59a2e40d99ebe1311df6e6e19e92b6b9
 
-@router.post("/telegram/", response_model=schemas.User)
+@router.get("/telegram/", response_model=schemas.User)
 async def create_user(id: int,
                       first_name: str,
                       username: str,
