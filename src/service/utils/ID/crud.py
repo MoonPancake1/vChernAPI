@@ -96,3 +96,16 @@ async def update_user_data(db: Session,
     user.avatar = current_user.avatar
     db.commit()
     return user
+
+
+async def create_user_telegram(db: Session, user_tg: schemas.UserCreateTelegram):
+    uuid = str(uuid4())
+    db_user = models.User(
+        uuid=uuid,
+        nickname=user_tg.username,
+        avatar=user_tg.photo_url,
+    )
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user

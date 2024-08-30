@@ -16,7 +16,7 @@ class UserBase(BaseModel):
     Базовая модель для таблицы с пользователями
     """
     nickname: str
-    email: str
+    email: str | None = None
 
 
 class UserCreate(UserBase):
@@ -24,7 +24,7 @@ class UserCreate(UserBase):
     Модель для создания записи в базе данных
     """
     ip: str | None = None
-    password: str
+    password: str | None = None
 
 
 class UserBase(BaseModel):
@@ -55,3 +55,13 @@ class UserUpdate(BaseModel):
     nickname: str | None = None
     email: str | None = None
     avatar: str | None = None
+
+
+# Social OAuth schemas
+class UserCreateTelegram(BaseModel):
+    id: int
+    first_name: str
+    username: str
+    photo_url: str
+    auth_date: int
+    hash: str

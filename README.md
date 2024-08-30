@@ -1,4 +1,4 @@
-# vC.ID && vC.Main API v.0.0.4.13
+# vC.ID && vC.Main API v.0.0.4.14
 Автор: Чернышев Владислав
 
 ## О проекте:
@@ -48,10 +48,14 @@ TEST_POSTGRES_PASSWORD
 ```
 7. Запустить проект командой: ```uvicorn main:app --reload```
 8. Создать миграцию: ```alembic revision --autogenerate -m "Name revision"```
-9. Произвести миграцию: ```alembic upgrade REVISION```
+9. Произвести миграцию: ```alembic upgrade (REVISION | head)```
 
 
 ## Обновления:
+
+- vC.ID && vC.Main API **v.0.0.4.14**:
+Обновлён README, добавлен новый endpoint 
+для создания пользователя через telegram
 
 - vC.ID && vC.Main API **v.0.0.4.13**:
 Добавлен новый endpoint /id/login/ и
