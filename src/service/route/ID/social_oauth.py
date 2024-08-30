@@ -6,6 +6,7 @@ import hmac
 
 from src.config.project_config.config import settings
 from src.service.utils.ID import schemas, crud
+from src.service.utils.ID.OAuth2 import create_tokens
 from src.service.utils.db import get_db
 
 BOT_TOKEN_HASH = hashlib.sha256(settings.PROD_TELEGRAM_BOT_TOKEN.encode())
@@ -24,14 +25,14 @@ router = APIRouter(prefix="/oauth",
 # hash=a3ce3852544a5830f5db75a0ad8a94ed59a2e40d99ebe1311df6e6e19e92b6b9
 
 @router.get("/telegram/", response_model=schemas.User)
-async def create_user(id: int,
+async def auth_tg_user(id: int,
                       first_name: str,
                       username: str,
                       photo_url: str,
                       auth_date: int,
                       hash: str,
                       db: Session = Depends(get_db)):
-    cp_user_tg = schemas.UserCreateTelegram(
+    user_tg = schemas.UserTelegram(
         id=id,
         first_name=first_name,
         username=username,
@@ -39,10 +40,10 @@ async def create_user(id: int,
         auth_date=auth_date,
         hash=hash
     )
-    if cp_user_tg.username:
-        query_hash = cp_user_tg.hash
+    if user_tg.username:
+        query_hash = user_tg.hash
         data_check_string = '\n'.join(
-            sorted(f'{x}={y}' for x, y in cp_user_tg if x not in ('hash', 'next'))
+            sorted(f'{x}={y}' for x, y in user_tg if x not in ('hash', 'next'))
         )
         computed_hash = hmac.new(
             BOT_TOKEN_HASH.digest(),
@@ -51,4 +52,9 @@ async def create_user(id: int,
         is_correct = hmac.compare_digest(computed_hash, query_hash)
         if not is_correct:
             raise HTTPException(status_code=403, detail='Telegram HASH problem')
-    return await crud.create_user_telegram(db=db, user_tg=cp_user_tg)
+    user = await crud.get_user_by_uuid(db, user_tg.id)
+    if not user:
+        user = await crud.create_user_telegram(db=db, user_tg=user_tg)
+    access_token, refresh_token = create_tokens()
+    return schemas.Token(access_token=access_token,
+                         refresh_token=refresh_token)

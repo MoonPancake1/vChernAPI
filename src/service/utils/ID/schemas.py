@@ -58,7 +58,7 @@ class UserUpdate(BaseModel):
 
 
 # Social OAuth schemas
-class UserCreateTelegram(BaseModel):
+class UserTelegram(BaseModel):
     id: int
     first_name: str
     username: str

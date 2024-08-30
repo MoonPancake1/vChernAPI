@@ -99,9 +99,8 @@ async def update_user_data(db: Session,
 
 
 async def create_user_telegram(db: Session, user_tg: schemas.UserCreateTelegram):
-    uuid = str(uuid4())
     db_user = models.User(
-        uuid=uuid,
+        uuid=user_tg.id,
         nickname=user_tg.username,
         avatar=user_tg.photo_url,
     )
