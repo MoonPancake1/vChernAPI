@@ -33,7 +33,7 @@ class UserBase(BaseModel):
     """
     uuid: str
     nickname: str
-    email: str
+    email: str | None
     is_active: bool = True
     is_admin: bool = False
     avatar: str
