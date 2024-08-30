@@ -33,7 +33,7 @@ class UserBase(BaseModel):
     """
     uuid: str
     nickname: str
-    email: str | None
+    email: str | None = None
     is_active: bool = True
     is_admin: bool = False
     avatar: str
@@ -59,7 +59,7 @@ class UserUpdate(BaseModel):
 
 # Social OAuth schemas
 class UserTelegram(BaseModel):
-    id: int
+    id: str
     first_name: str
     username: str
     photo_url: str

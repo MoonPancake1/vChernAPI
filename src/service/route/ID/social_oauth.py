@@ -24,8 +24,8 @@ router = APIRouter(prefix="/oauth",
 # auth_date=1725012189
 # hash=a3ce3852544a5830f5db75a0ad8a94ed59a2e40d99ebe1311df6e6e19e92b6b9
 
-@router.get("/telegram/", response_model=schemas.User)
-async def auth_tg_user(id: int,
+@router.get("/telegram/", response_model=schemas.Token)
+async def auth_tg_user(id: str,
                       first_name: str,
                       username: str,
                       photo_url: str,
@@ -55,6 +55,6 @@ async def auth_tg_user(id: int,
     user = await crud.get_user_by_uuid(db, user_tg.id)
     if not user:
         user = await crud.create_user_telegram(db=db, user_tg=user_tg)
-    access_token, refresh_token = create_tokens()
+    access_token, refresh_token = create_tokens(user_tg.id)
     return schemas.Token(access_token=access_token,
                          refresh_token=refresh_token)

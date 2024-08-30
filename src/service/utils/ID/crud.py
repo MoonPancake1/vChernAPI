@@ -104,6 +104,7 @@ async def create_user_telegram(db: Session, user_tg: schemas.UserTelegram):
         nickname=user_tg.username,
         avatar=user_tg.photo_url,
     )
+    print(db_user.uuid)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
