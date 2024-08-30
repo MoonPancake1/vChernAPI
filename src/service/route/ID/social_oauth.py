@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, Request, HTTPException
+from fastapi.responses import RedirectResponse
 from fastapi.security import HTTPBearer
 from sqlalchemy.orm import Session
 import hashlib
@@ -56,5 +57,4 @@ async def auth_tg_user(id: str,
     if not user:
         user = await crud.create_user_telegram(db=db, user_tg=user_tg)
     access_token, refresh_token = create_tokens(user_tg.id)
-    return schemas.Token(access_token=access_token,
-                         refresh_token=refresh_token)
+    return RedirectResponse(f"https://vchern.me/auth?access_token={access_token}&refresh_token={refresh_token}")

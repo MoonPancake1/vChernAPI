@@ -84,6 +84,6 @@ async def check_grade(current_user: Annotated[schemas.User, Depends(get_current_
     for grade in grades:
         if grade.user_uuid == current_user.uuid:
             return grade
-    raise HTTPException(status_code=404, detail="Пользователь пока не оставлял оценку!")
+    raise HTTPException(status_code=200, detail="Пользователь пока не оставлял оценку!")
 
 
