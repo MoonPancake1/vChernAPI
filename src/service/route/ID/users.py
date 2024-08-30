@@ -24,11 +24,10 @@ async def check_users(nickname: str | None = None,
     return data
 
 
-
-
+# Standart create user
 @router.post("/", response_model=schemas.User)
 async def create_user(request: Request,
-        user: schemas.UserCreate, db: Session = Depends(get_db)):
+                      user: schemas.UserCreate, db: Session = Depends(get_db)):
     """
     Функция для создания пользователя в базе данных
     :param user: данные о пользователе в виде макета UserCreate
@@ -114,7 +113,6 @@ async def update_user_me(
         ip=current_user.ip,
     )
     return {"user": current_user, "result": True}
-
 
 
 @router.get("/get_user/", response_model=schemas.User)

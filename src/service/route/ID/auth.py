@@ -10,7 +10,7 @@ from fastapi.responses import HTMLResponse
 
 from src.config.project_config.config import settings
 from src.service.utils.ID import schemas, crud
-from src.service.utils.ID.OAuth2 import oauth2_scheme, verify_password
+from src.service.utils.ID.OAuth2 import oauth2_scheme, verify_password, create_access_token, create_tokens
 from src.service.utils.db import get_db
 from src.templates.template_init import templates
 
@@ -94,47 +94,6 @@ async def get_current_user_for_refresh(token: Annotated[str, Depends(oauth2_sche
     return user
 
 
-def create_token(data: dict, expires_delta: timedelta | None = None):
-    """
-    Функция для создания JWT
-    :param data: данные о пользователе
-    :param expires_delta: длительность жизни токена в минутах
-    :return: JWT токен авторизации
-    """
-    to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + expires_delta
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
-    return encoded_jwt
-
-
-def create_access_token(data: dict,
-                        expires_delta: timedelta | None = None):
-    """
-    Функция для создания access_token
-    """
-    if expires_delta:
-        expires_delta = timedelta(minutes=
-                                  settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    else:
-        expires_delta = timedelta(minutes=60)
-    return create_token(data, expires_delta)
-
-
-def create_refresh_token(data: dict,
-                         expires_delta: timedelta | None = None):
-    """
-    Функция для создания refresh_token
-    """
-    if expires_delta:
-        expires_delta = timedelta(days=
-                                  settings.REFRESH_TOKEN_EXPIRE_DAYS)
-    else:
-        expires_delta = timedelta(days=30)
-    return create_token(data, expires_delta)
-
-
-
 async def get_current_active_user(
     current_user: Annotated[schemas.User, Depends(get_current_user)],
 ):
@@ -162,7 +121,6 @@ async def auth_refresh_jwt(user: Annotated[schemas.User, Depends(get_current_use
     return schemas.Token(access_token=access_token)
 
 
-
 @router.post("/tokens/")
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
@@ -181,20 +139,11 @@ async def login_for_access_token(
             detail="Неверный логин или пароль!",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"type": "access",
-              "sub": user.uuid},
-        expires_delta=access_token_expires
-    )
-    refresh_token_expires = timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
-    refresh_token = create_refresh_token(
-        data={"type": "refresh",
-              "sub": user.uuid}, expires_delta=refresh_token_expires
-    )
+
+    access_token, refresh_token = create_tokens(user.uuid)
 
     return schemas.Token(access_token=access_token,
-                         refresh_token=refresh_token, )
+                         refresh_token=refresh_token)
 
 
 @router.get("/", response_class=HTMLResponse)
