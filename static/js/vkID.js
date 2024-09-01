@@ -1,12 +1,13 @@
-const VKID = window.VKIDSDK;
+let VKID = window.VKIDSDK;
 
 VKID.Config.init({
-  app: 0,
+  app: 52237939,
+  redirectUrl: 'https://id.vchern.me/id/oauth/vk/',
 });
 
 const oneTap = new VKID.OneTap();
 
-const container = document.getElementById('btn-vk');
+const container = document.getElementById('VkIdSdkOneTap');
 
 if (container) {
   oneTap.render({
