@@ -7,7 +7,7 @@ VKID.Config.init({
 
 const oneTap = new VKID.OneTap();
 
-const container = document.getElementById('VkIdSdkOneTap');
+const container = document.getElementById('btn-vk');
 
 if (container) {
   oneTap.render({
