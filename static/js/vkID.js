@@ -15,7 +15,7 @@ const VKID = window.VKIDSDK;
 
 VKID.Config.init({
     app: 52237939,
-    redirectUrl: "https://id.vchern.me/id/oauth/vk/",
+    redirectUrl: "https://id.vchern.me/id/login/",
     mode: VKID.ConfigAuthMode.Redirect,
     codeVerifier: get_code_verifier(64),
     state: 'Testing_redirect_VK.ID_to_VC.ID...',
@@ -31,4 +31,13 @@ const container = document.getElementById('VkIdSdkOneTap');
 if (container) {
   // Отрисовка кнопки в контейнере с именем приложения APP_NAME, светлой темой и на русском языке.
   oneTap.render({ container: container, scheme: VKID.Scheme.LIGHT, lang: VKID.Languages.RUS });
+}
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+
+if (urlParams.has('code')) {
+    const code = urlParams.get('code')
+    const device_id = urlParams.get('device_id')
+    console.log(VKID.Auth.exchangeCode(code, device_id))
 }
