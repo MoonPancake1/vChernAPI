@@ -1,4 +1,4 @@
-# vC.ID && vC.Main API v.0.1.0.2
+# vC.ID && vC.Main API v.0.1.0.3
 Автор: Чернышев Владислав
 
 ## О проекте:
@@ -52,6 +52,9 @@ TEST_POSTGRES_PASSWORD
 
 
 ## Обновления:
+
+- vC.ID && vC.Main API **v.0.1.0.3**:
+Фикс отображения кнопки VK.ID
 
 - vC.ID && vC.Main API **v.0.1.0.2**:
 Добавление авторизации с помощью VK.ID
