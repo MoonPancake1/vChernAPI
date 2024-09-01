@@ -67,7 +67,7 @@ async def auth_tg_user(id: str,
 # &state=lAMllcvpSo2u-3nQQ7YSOnUhocSt9-MENQo1cXpNhq6Vecc2
 # &ext_id=nDEqy33xbzLSRcxwXbTxYyHBdlpbsaR5Ra_RwLo4ODSPjb2N15rjTf-Y9b3D71FN-8Al1aeLdc00oTRemYZzCu1eD0ZgEtSwHwGFqtjOW8_jAdh5CPVk7y7jnG-_8D6ssSaEigQGvyl_7gEWive2T52KIx3uxrUY1YFYMcKm-JYq-A
 # &type=code_v2
-@router.get('/vk/', response_model=schemas.Token)
+@router.get('/vk/')
 async def auth_vk(code: str,
                   expires_in: int,
                   device_id: str,
@@ -78,6 +78,6 @@ async def auth_vk(code: str,
         "client_id": device_id,
         "access_token": code,
     }
-    r = requests.post("https://id.vk.com/oauth2/user_info", params=params)
+    r = await requests.post("https://id.vk.com/oauth2/user_info", params=params)
     print(r.json())
-    return HTTPException(status_code=404, detail='Тестирую... Пока можно войти с помощью тг)')
+    raise HTTPException(status_code=404, detail='Тестирую... Пока можно войти с помощью тг)')
