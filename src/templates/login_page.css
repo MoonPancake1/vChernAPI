@@ -1,0 +1,29 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    height: 100vh;
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-window {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+    padding: 20px;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.text-auth-window {
+    font-family: Montserrat, Serif;
+    font-size: 24px;
+    margin: 0 0 16px 0;
+}
