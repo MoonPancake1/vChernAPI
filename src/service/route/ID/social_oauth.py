@@ -63,7 +63,7 @@ async def auth_tg_user(id: str,
 
 
 @router.get('/vk/')
-async def auth_vk(code: str,
+async def init_vk_user(code: str,
                   expires_in: int,
                   device_id: str,
                   state: str,
@@ -83,4 +83,10 @@ async def auth_vk(code: str,
     }
     r = requests.post("https://id.vk.com/oauth2/auth", params=params, headers=headers)
     print(r.json())
+    raise HTTPException(status_code=404, detail='Тестирую... Пока можно войти с помощью тг)')
+
+
+@router.get('/vk-auth/}')
+async def auth_vk_user(request: Request):
+    print(request.body())
     raise HTTPException(status_code=404, detail='Тестирую... Пока можно войти с помощью тг)')
