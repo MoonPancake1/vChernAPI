@@ -67,7 +67,7 @@ async def auth_tg_user(id: str,
 # &state=lAMllcvpSo2u-3nQQ7YSOnUhocSt9-MENQo1cXpNhq6Vecc2
 # &ext_id=nDEqy33xbzLSRcxwXbTxYyHBdlpbsaR5Ra_RwLo4ODSPjb2N15rjTf-Y9b3D71FN-8Al1aeLdc00oTRemYZzCu1eD0ZgEtSwHwGFqtjOW8_jAdh5CPVk7y7jnG-_8D6ssSaEigQGvyl_7gEWive2T52KIx3uxrUY1YFYMcKm-JYq-A
 # &type=code_v2
-@router.get('/vk/, response_model=schemas.Token')
+@router.get('/vk/', response_model=schemas.Token)
 async def auth_vk(code: str,
                   expires_in: int,
                   device_id: str,
