@@ -63,12 +63,11 @@ async def auth_tg_user(id: str,
 
 
 @router.get('/vk/')
-async def init_vk_user(code: str,
-                  expires_in: int,
-                  device_id: str,
-                  state: str,
-                  ext_id: str,
-                  type: str):
+async def init_vk_user(
+            code: str,
+            state: str,
+            device_id: str,
+):
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
     }
