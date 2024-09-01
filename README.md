@@ -1,4 +1,4 @@
-# vC.ID && vC.Main API v.0.1.0.2
+# vC.ID && vC.Main API v.0.1.0.3
 Автор: Чернышев Владислав
 
 ## О проекте:
@@ -37,6 +37,9 @@ API_URL
 # Telegram OAuth2
 PROD_TELEGRAM_BOT_TOKEN
 DEVELOP_TELEGRAM_BOT_TOKEN
+
+# VK.ID OAuth2
+VK_ID_CLIENT
 ```
 6. Добавить следующие переменные в .env.db:
 ```
@@ -52,6 +55,9 @@ TEST_POSTGRES_PASSWORD
 
 
 ## Обновления:
+
+- vC.ID && vC.Main API **v.0.1.0.3**:
+Фикс отображения кнопки VK.ID
 
 - vC.ID && vC.Main API **v.0.1.0.2**:
 Добавление авторизации с помощью VK.ID

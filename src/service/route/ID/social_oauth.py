@@ -4,11 +4,13 @@ from fastapi.security import HTTPBearer
 from sqlalchemy.orm import Session
 import hashlib
 import hmac
+import requests
 
 from src.config.project_config.config import settings
 from src.service.utils.ID import schemas, crud
 from src.service.utils.ID.OAuth2 import create_tokens
 from src.service.utils.db import get_db
+from src.service.utils.ID.vk_auth_utils import get_code_verifier
 
 BOT_TOKEN_HASH = hashlib.sha256(settings.PROD_TELEGRAM_BOT_TOKEN.encode())
 http_bearer = HTTPBearer(auto_error=False)
@@ -58,3 +60,27 @@ async def auth_tg_user(id: str,
         user = await crud.create_user_telegram(db=db, user_tg=user_tg)
     access_token, refresh_token = create_tokens(user_tg.id)
     return RedirectResponse(f"https://vchern.me/auth?access_token={access_token}&refresh_token={refresh_token}")
+
+
+@router.get('/vk/')
+async def auth_vk(
+            code: str,
+            state: str,
+            device_id: str,
+):
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+    }
+    params = {
+        "grant_type": "authorization_code",
+        "code_verifier": get_code_verifier(),
+        "redirect_uri": settings.VK_ID_AUTH_REDIRECT,
+        "code": code,
+        "client_id": settings.VK_ID_CLIENT,
+        "device_id": device_id,
+        "state": state,
+    }
+    print(params)
+    r = requests.post("https://id.vk.com/oauth2/auth", params=params, headers=headers)
+    print(r.json())
+    return RedirectResponse(f"https://id.vchern.me/id/login/")

@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     TEST_DB_HOST: str
     PROD_TELEGRAM_BOT_TOKEN: str
     DEVELOP_TELEGRAM_BOT_TOKEN: str
+    VK_ID_CLIENT: str
+    VK_ID_AUTH_REDIRECT: str
 
     model_config = SettingsConfigDict(env_file=".env")
 
