@@ -36,6 +36,7 @@ const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
 if (urlParams.has('code')) {
+    console.log(urlParams.getAll())
     const code = urlParams.get('code')
     const device_id = urlParams.get('device_id')
     console.log(VKID.Auth.exchangeCode(code, device_id))
