@@ -8,11 +8,11 @@ VKID.Config.init({
 
 const oneTap = new VKID.OneTap();
 
-const container = document.getElementById('VkIdSdkOneTap');
+const cnt = document.getElementById('VkIdSdkOneTap');
 
-if (container) {
+if (cnt) {
   oneTap.render({
-    container,
+    cnt,
     scheme: 'dark',
     lang: 0,
     styles: {
