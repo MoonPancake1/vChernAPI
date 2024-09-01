@@ -1,10 +1,10 @@
-let VKID = window.VKIDSDK;
+const VKID = window.VKIDSDK;
 
-VKID.Config.init({
-  app: 52237939,
-  redirectUrl: 'https://id.vchern.me/id/oauth/vk/',
-  mode: VKID.ConfigAuthMode.Redirect,
-});
+// VKID.Config.init({
+//   app: 52237939,
+//   redirectUrl: 'https://id.vchern.me/id/oauth/vk/',
+//   mode: VKID.ConfigAuthMode.Redirect,
+// });
 
 // Создание экземпляра кнопки.
 const oneTap = new VKID.OneTap();
