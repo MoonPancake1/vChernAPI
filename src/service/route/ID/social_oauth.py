@@ -10,6 +10,7 @@ from src.config.project_config.config import settings
 from src.service.utils.ID import schemas, crud
 from src.service.utils.ID.OAuth2 import create_tokens
 from src.service.utils.db import get_db
+from src.service.utils.ID.vk_auth_utils import get_code_verifier
 
 BOT_TOKEN_HASH = hashlib.sha256(settings.PROD_TELEGRAM_BOT_TOKEN.encode())
 http_bearer = HTTPBearer(auto_error=False)
@@ -61,12 +62,6 @@ async def auth_tg_user(id: str,
     return RedirectResponse(f"https://vchern.me/auth?access_token={access_token}&refresh_token={refresh_token}")
 
 
-# code=vk2.a.8WieYarpcsfYSeDD1nMrSuQB0yCuhlYWdyidsAKm4Gvjvyxz0TExsYywvBCwk80qPDnX4KnzucuTkMDiLaj3JCjLgAacneEKGjCKUzccLnkbt8pVf86zSO7dc_2Jhb9pVapIFNHYV0fub9I_dEDt_vILVoyXcsNW4A3rwQB0O0vUeci3M3lU0qKR5irxMcnccgnSh3MPGhCd73YnMsK7JA
-# &expires_in=600
-# &device_id=v4l6_5Eex2Tj_X5e23iDixocscvM-ubJLOO99Phb3ZYcKykSh_oMJGDWAoM2lhC_WmKKW2qNkzyiXPDbV6N4qA
-# &state=lAMllcvpSo2u-3nQQ7YSOnUhocSt9-MENQo1cXpNhq6Vecc2
-# &ext_id=nDEqy33xbzLSRcxwXbTxYyHBdlpbsaR5Ra_RwLo4ODSPjb2N15rjTf-Y9b3D71FN-8Al1aeLdc00oTRemYZzCu1eD0ZgEtSwHwGFqtjOW8_jAdh5CPVk7y7jnG-_8D6ssSaEigQGvyl_7gEWive2T52KIx3uxrUY1YFYMcKm-JYq-A
-# &type=code_v2
 @router.get('/vk/')
 async def auth_vk(code: str,
                   expires_in: int,
@@ -74,10 +69,18 @@ async def auth_vk(code: str,
                   state: str,
                   ext_id: str,
                   type: str):
-    params = {
-        "client_id": device_id,
-        "access_token": code,
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
     }
-    r = requests.post("https://id.vk.com/oauth2/user_info", params=params)
+    params = {
+        "grant_type": "authorization_code",
+        "code_verifier": get_code_verifier(),
+        "redirect_uri": settings.VK_ID_AUTH_REDIRECT,
+        "code": code,
+        "client_id": settings.VK_ID_CLIENT,
+        "device_id": device_id,
+        "state": state,
+    }
+    r = requests.post("https://id.vk.com/oauth2/auth", params=params, headers=headers)
     print(r.json())
     raise HTTPException(status_code=404, detail='Тестирую... Пока можно войти с помощью тг)')

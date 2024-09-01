@@ -37,6 +37,9 @@ API_URL
 # Telegram OAuth2
 PROD_TELEGRAM_BOT_TOKEN
 DEVELOP_TELEGRAM_BOT_TOKEN
+
+# VK.ID OAuth2
+VK_ID_CLIENT
 ```
 6. Добавить следующие переменные в .env.db:
 ```
