@@ -33,3 +33,7 @@ body {
     flex-direction: column;
     gap: 10px;
 }
+
+.btn-vk {
+    width: 226px;
+}
