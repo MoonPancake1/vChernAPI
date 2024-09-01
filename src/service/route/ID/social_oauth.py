@@ -83,7 +83,7 @@ async def init_vk_user(
     print(params)
     r = requests.post("https://id.vk.com/oauth2/auth", params=params, headers=headers)
     print(r.json())
-    raise HTTPException(status_code=404, detail='Тестирую... Пока можно войти с помощью тг)')
+    return RedirectResponse(f"https://id.vchern.me/id/login")
 
 
 @router.get('/vk-auth/}')

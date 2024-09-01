@@ -15,10 +15,10 @@ const VKID = window.VKIDSDK;
 
 VKID.Config.init({
     app: 52237939,
-    redirectUrl: 'https://id.vchern.me/id/oauth/vk/',
+    redirectUrl: 'https://id.vchern.me/id/oauth/vk',
     mode: VKID.ConfigAuthMode.Redirect,
     codeVerifier: get_code_verifier(64),
-    state: 'Тестируем редиректы...',
+    state: 'Testing_redirect_VK.ID_to_VC.ID...',
 });
 
 // Создание экземпляра кнопки.
