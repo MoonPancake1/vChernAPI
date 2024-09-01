@@ -81,6 +81,7 @@ async def init_vk_user(code: str,
         "device_id": device_id,
         "state": state,
     }
+    print(params)
     r = requests.post("https://id.vk.com/oauth2/auth", params=params, headers=headers)
     print(r.json())
     raise HTTPException(status_code=404, detail='Тестирую... Пока можно войти с помощью тг)')
