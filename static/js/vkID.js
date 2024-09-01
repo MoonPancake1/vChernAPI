@@ -18,7 +18,6 @@ VKID.Config.init({
     redirectUrl: "https://id.vchern.me/id/login/",
     mode: VKID.ConfigAuthMode.Redirect,
     codeVerifier: get_code_verifier(64),
-    state: 'Testing_redirect_VK.ID_to_VC.ID...',
 });
 
 // Создание экземпляра кнопки.
