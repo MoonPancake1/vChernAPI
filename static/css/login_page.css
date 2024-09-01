@@ -25,5 +25,11 @@ body {
 .text-auth-window {
     font-family: Montserrat, Serif;
     font-size: 24px;
-    margin: 0 0 16px 0;
+    margin: 0 0 18px 0;
+}
+
+.btns-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
