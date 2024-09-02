@@ -11,32 +11,14 @@ function get_code_verifier (length) {
     return result;
 }
 
-async function generateCodeChallenge(codeVerifier) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(codeVerifier);
-
-    const hash = await crypto.subtle.digest('SHA-256', data);
-
-    const byteArray = new Uint8Array(hash);
-
-    const base64String = btoa(String.fromCharCode(...byteArray));
-    const codeChallenge = base64String.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-
-    return codeChallenge;
-}
-
 const VKID = window.VKIDSDK;
 
-generateCodeChallenge(get_code_verifier(64)).then(
-    codeChallenge => {
-        VKID.Config.init({
-            app: 52237939,
-            redirectUrl: "https://id.vchern.me/id/login/",
-            mode: VKID.ConfigAuthMode.InNewTab,
-            codeChallenge: codeChallenge,
-        });
-    }
-)
+VKID.Config.init({
+    app: 52237939,
+    redirectUrl: "https://id.vchern.me/id/login/",
+    mode: VKID.ConfigAuthMode.InNewTab,
+    codeVerifier: get_code_verifier(64),
+});
 
 const oneTap = new VKID.OneTap();
 
@@ -57,6 +39,6 @@ if (urlParams.has('code')) {
     }
     const code = urlParams.get('code')
     const device_id = urlParams.get('device_id')
-    console.log(VKID.Config.store.codeChallenge)
+    console.log(VKID.Config.store.codeVerifier)
     console.log(VKID.Auth.exchangeCode(code, device_id))
 }
