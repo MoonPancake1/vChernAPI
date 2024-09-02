@@ -11,33 +11,52 @@ function get_code_verifier (length) {
     return result;
 }
 
+async function generateCodeChallenge(codeVerifier) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(codeVerifier);
+
+    const hash = await crypto.subtle.digest('SHA-256', data);
+
+    const byteArray = new Uint8Array(hash);
+
+    const base64String = btoa(String.fromCharCode(...byteArray));
+    const codeChallenge = base64String.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+    return codeChallenge;
+}
+
 const VKID = window.VKIDSDK;
 
-VKID.Config.init({
-    app: 52237939,
-    redirectUrl: "https://id.vchern.me/id/login/",
-    mode: VKID.ConfigAuthMode.Redirect,
-    codeVerifier: get_code_verifier(64),
-});
+generateCodeChallenge(get_code_verifier(64)).then(
+    codeChallenge => {
+        VKID.Config.init({
+            app: 52237939,
+            redirectUrl: "https://id.vchern.me/id/login/",
+            mode: VKID.ConfigAuthMode.InNewTab,
+            codeChallenge: codeChallenge,
+        });
+    }
+)
 
-// Создание экземпляра кнопки.
 const oneTap = new VKID.OneTap();
 
-// Получение контейнера из разметки.
 const container = document.getElementById('VkIdSdkOneTap');
 
-// Проверка наличия кнопки в разметке.
 if (container) {
-  // Отрисовка кнопки в контейнере с именем приложения APP_NAME, светлой темой и на русском языке.
   oneTap.render({ container: container, scheme: VKID.Scheme.LIGHT, lang: VKID.Languages.RUS });
 }
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
+
 if (urlParams.has('code')) {
-    console.log(urlParams.getAll())
+    entries = urlParams.entries();
+    for(const entry of entries) {
+        console.log(`${entry[0]}: ${entry[1]}`);
+    }
     const code = urlParams.get('code')
     const device_id = urlParams.get('device_id')
+    console.log(VKID.Config.store.codeChallenge)
     console.log(VKID.Auth.exchangeCode(code, device_id))
 }
