@@ -36,16 +36,10 @@ if (urlParams.has('code')) {
     entries = urlParams.entries();
     const code = urlParams.get('code')
     const device_id = urlParams.get('device_id')
-    VKID.Auth.exchangeCode(code, device_id).then(
-        user => {
-            console.log(user)
-            fetch(`https://id.vchern.me/id/oauth/vk/?user=${user}`)
-                .then(
-                    q => {
-                        console.log(q)
-                    }
-                )
-            // window.location.href = ``;
-        }
+    const userTokens = await VKID.Auth.exchangeCode(code, device_id)
+    const userData = await VKID.Auth.userInfo(userTokens.access_token)
+    console.log(userData)
+    fetch(
+        `https://id.vchern.me/id/oauth/vk/` + new URLSearchParams(userData).toString()
     )
 }
