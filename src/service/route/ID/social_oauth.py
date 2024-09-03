@@ -63,7 +63,7 @@ async def auth_vk(
         "Content-Type": "application/x-www-form-urlencoded",
     }
 
-    q = json.loads(q)
+    # q = json.loads(q)
 
     print(q)
 
