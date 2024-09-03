@@ -76,6 +76,8 @@ async def auth_vk(
         "access_token": access_token,
     }
 
+    print(params)
+
     r = requests.post("https://id.vk.com/oauth2/user_info", params=params, headers=headers)
     print(r.json())
     raise HTTPException(status_code=500, detail=f'Обработка данных... {r.json()}')
