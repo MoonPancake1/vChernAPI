@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Request, HTTPException
+from fastapi import APIRouter, Depends, Request, HTTPException, Query
 from fastapi.responses import RedirectResponse
 from fastapi.security import HTTPBearer
 from sqlalchemy.orm import Session
@@ -57,7 +57,7 @@ async def auth_tg_user(id: str,
 
 @router.get('/vk/')
 async def auth_vk(
-            q: str | None = None
+            q: str | None = Query(default=None, max_length=50)
 ):
     headers = {
         "Content-Type": "application/x-www-form-urlencoded",
