@@ -38,8 +38,7 @@ if (urlParams.has('code')) {
     const device_id = urlParams.get('device_id')
     VKID.Auth.exchangeCode(code, device_id).then(
         user => {
-            console.log(user);
-            Response.redirect(`https://id.vchern.me/id/oauth/vk/${user}`, 302);
+            window.location.href = `https://id.vchern.me/id/oauth/vk/?access_token=${user.access_token}&client_id=52237939}`;
         }
     )
 }

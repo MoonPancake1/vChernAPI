@@ -64,10 +64,18 @@ async def auth_tg_user(id: str,
 
 @router.get('/vk/')
 async def auth_vk(
-            q: str | None = None
+            access_token: str,
+            client_id: str,
 ):
-    params = {"q": q}
-    print(params)
-    # r = requests.post("https://id.vk.com/oauth2/auth", params=params, headers=headers)
-    # print(r.json())
-    return RedirectResponse(f"https://id.vchern.me/id/login/")
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+    }
+
+    params = {
+        "client_id": client_id,
+        "access_token": access_token,
+    }
+
+    r = requests.post("https://id.vk.com/oauth2/user_info", params=params, headers=headers)
+    print(r.json())
+    raise HTTPException(status_code=500, detail='Обработка данных...')
