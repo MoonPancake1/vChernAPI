@@ -1,4 +1,4 @@
-# vC.ID && vC.Main API v.0.1.1.1
+# vC.ID && vC.Main API v.0.1.1.2
 Автор: Чернышев Владислав
 
 ## О проекте:
@@ -57,6 +57,10 @@ TEST_POSTGRES_PASSWORD
 
 
 ## Обновления:
+
+- vC.ID && vC.Main API **v.0.1.1.2**:
+Исправлена ошибка с выпуском токенов 
+для пользователей vk и telegram
 
 - vC.ID && vC.Main API **v.0.1.1.1**:
 Фикс проблемы с переходом на vchern.me
