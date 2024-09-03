@@ -14,9 +14,9 @@ function get_code_verifier(length) {
 function get_user_data(userTokens) {
     VKID.Auth.userInfo(userTokens.access_token).then(
         userData => {
-            console.log(userData)
+            let user = userData.user
             fetch(
-                `https://id.vchern.me/id/oauth/vk/` + new URLSearchParams(userData).toString()
+                `https://id.vchern.me/id/oauth/vk/` + new URLSearchParams(user).toString()
             ).then(r => {
                 console.log(r)
             })
