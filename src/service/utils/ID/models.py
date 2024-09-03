@@ -20,4 +20,6 @@ class User(Base):
     is_admin = Column(Boolean, default=False)
     avatar = Column(String, default='static/avatars/default.png')
     ip = Column(String, default='127.0.0.1')
+    vk_id = Column(String, default=None)
+    tg_id = Column(String, default=None)
     role = Column(String, default='user')

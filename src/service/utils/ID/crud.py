@@ -98,13 +98,34 @@ async def update_user_data(db: Session,
     return user
 
 
-async def create_user_telegram(db: Session, user_tg: schemas.UserTelegram):
-    db_user = models.User(
-        uuid=str(user_tg.id),
-        nickname=user_tg.username,
-        avatar=user_tg.photo_url,
-    )
-    print(db_user.uuid)
+async def get_user_by_social_id(db: Session, social_id: str, social: str):
+    """
+    Функция возвращает пользователя с определённыйм social_id
+    """
+
+    if social == 'vk':
+        return db.query(models.User).filter(models.User.vk_id == social_id).first()
+    elif social == 'tg':
+        return db.query(models.User).filter(models.User.tg_id == social_id).first()
+
+
+async def create_user_oauth(db: Session, user: schemas.UserTelegram | schemas.UserVK,
+                            social: str):
+    uuid = str(uuid4())
+    if social == 'vk':
+        db_user = models.User(
+            uuid=uuid,
+            nickname=user.username,
+            avatar=user.photo_url,
+            vk_id=str(user.id),
+        )
+    elif social == 'tg':
+        db_user = models.User(
+            uuid=uuid,
+            nickname=user.username,
+            avatar=user.photo_url,
+            tg_id=str(user.id),
+        )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
