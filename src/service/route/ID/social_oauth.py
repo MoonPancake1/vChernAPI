@@ -73,5 +73,6 @@ async def auth_vk(
     if not user:
         user = await crud.create_user_oauth(db=db, user=user_vk, social='vk')
     access_token, refresh_token = create_tokens(user_vk.id)
+    print(access_token, refresh_token, user)
 
     return RedirectResponse(f"https://vchern.me/auth?access_token={access_token}&refresh_token={refresh_token}")
