@@ -64,23 +64,10 @@ async def auth_tg_user(id: str,
 
 @router.get('/vk/')
 async def auth_vk(
-            code: str,
-            state: str,
-            device_id: str,
+            q: str | None = None
 ):
-    headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-    }
-    params = {
-        "grant_type": "authorization_code",
-        "code_verifier": get_code_verifier(),
-        "redirect_uri": settings.VK_ID_AUTH_REDIRECT,
-        "code": code,
-        "client_id": settings.VK_ID_CLIENT,
-        "device_id": device_id,
-        "state": state,
-    }
+    params = {"q": q}
     print(params)
-    r = requests.post("https://id.vk.com/oauth2/auth", params=params, headers=headers)
-    print(r.json())
+    # r = requests.post("https://id.vk.com/oauth2/auth", params=params, headers=headers)
+    # print(r.json())
     return RedirectResponse(f"https://id.vchern.me/id/login/")

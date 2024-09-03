@@ -1,4 +1,4 @@
-# vC.ID && vC.Main API v.0.1.0.3
+# vC.ID && vC.Main API v.0.1.0.4
 Автор: Чернышев Владислав
 
 ## О проекте:
@@ -40,6 +40,8 @@ DEVELOP_TELEGRAM_BOT_TOKEN
 
 # VK.ID OAuth2
 VK_ID_CLIENT
+VK_ID_AUTH_REDIRECT
+VK_ID_CLIENT_SECRET
 ```
 6. Добавить следующие переменные в .env.db:
 ```
@@ -55,6 +57,10 @@ TEST_POSTGRES_PASSWORD
 
 
 ## Обновления:
+
+- vC.ID && vC.Main API **v.0.1.0.4**:
+Обновлён модуль авторизации для теста 
+VK.ID OAuth2
 
 - vC.ID && vC.Main API **v.0.1.0.3**:
 Фикс отображения кнопки VK.ID
