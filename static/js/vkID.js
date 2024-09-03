@@ -16,7 +16,7 @@ function get_user_data(userTokens) {
         userData => {
             let user = userData.user
             fetch(
-                `https://id.vchern.me/id/oauth/vk/` + new URLSearchParams(user).toString()
+                `https://id.vchern.me/id/oauth/vk/?` + new URLSearchParams(user).toString()
             ).then(r => {
                 console.log(r)
             })
