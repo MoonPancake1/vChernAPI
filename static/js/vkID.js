@@ -39,7 +39,13 @@ if (urlParams.has('code')) {
     VKID.Auth.exchangeCode(code, device_id).then(
         user => {
             console.log(user)
-            // window.location.href = `https://id.vchern.me/id/oauth/vk/?access_token=${user.access_token}&client_id=52237939`;
+            fetch("https://id.vchern.me/id/oauth/vk/?access_token=${user.access_token}&client_id=52237939")
+                .then(
+                    q => {
+                        console.log(q)
+                    }
+                )
+            // window.location.href = ``;
         }
     )
 }
