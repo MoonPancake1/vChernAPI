@@ -1,4 +1,4 @@
-function get_code_verifier (length) {
+function get_code_verifier(length) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let result = '';
     const charactersLength = characters.length;
@@ -9,6 +9,19 @@ function get_code_verifier (length) {
     }
 
     return result;
+}
+
+function get_user_data(userTokens) {
+    VKID.Auth.userInfo(userTokens.access_token).then(
+        userData => {
+            let user = userData.user
+            fetch(
+                `https://id.vchern.me/id/oauth/vk/?` + new URLSearchParams(user).toString()
+            ).then(r => {
+                console.log(r)
+            })
+        }
+    )
 }
 
 const VKID = window.VKIDSDK;
@@ -34,11 +47,9 @@ const urlParams = new URLSearchParams(queryString);
 
 if (urlParams.has('code')) {
     entries = urlParams.entries();
-    for(const entry of entries) {
-        console.log(`${entry[0]}: ${entry[1]}`);
-    }
     const code = urlParams.get('code')
     const device_id = urlParams.get('device_id')
-    console.log(VKID.Config.store.codeVerifier)
-    console.log(VKID.Auth.exchangeCode(code, device_id))
+    VKID.Auth.exchangeCode(code, device_id).then(
+        userTokens => get_user_data(userTokens)
+    )
 }
