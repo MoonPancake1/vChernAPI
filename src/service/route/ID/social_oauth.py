@@ -4,6 +4,7 @@ from fastapi.security import HTTPBearer
 from sqlalchemy.orm import Session
 import hashlib
 import hmac
+import json
 import requests
 
 from src.config.project_config.config import settings
@@ -18,14 +19,6 @@ router = APIRouter(prefix="/oauth",
                    tags=["oauth"],
                    dependencies=[Depends(http_bearer)])
 
-
-# id=611845316
-# first_name=Влад
-# username=p1n0k10
-# photo_url=https%3A%2F%2Ft.me%2Fi%2Fuserpic%2F320%2F9tYstrI3uJIKzzDJCps-YqHbc7cs_GyO7TLj8cjw_Kg.jpg
-# photo_url_formated=https://t.me/i/userpic/320/9tYstrI3uJIKzzDJCps-YqHbc7cs_GyO7TLj8cjw_Kg.jpg
-# auth_date=1725012189
-# hash=a3ce3852544a5830f5db75a0ad8a94ed59a2e40d99ebe1311df6e6e19e92b6b9
 
 @router.get("/telegram/", response_model=schemas.Token)
 async def auth_tg_user(id: str,
@@ -64,20 +57,16 @@ async def auth_tg_user(id: str,
 
 @router.get('/vk/')
 async def auth_vk(
-            access_token: str,
-            client_id: str,
+            q: str | None = None
 ):
     headers = {
         "Content-Type": "application/x-www-form-urlencoded",
     }
 
-    params = {
-        "client_id": client_id,
-        "access_token": access_token,
-    }
+    q = json.loads(q)
 
-    print(params)
+    print(q)
 
-    r = requests.post("https://id.vk.com/oauth2/user_info", params=params, headers=headers)
-    print(r.json())
-    raise HTTPException(status_code=500, detail=f'Обработка данных... {r.json()}')
+    # r = requests.post("https://id.vk.com/oauth2/user_info", params=params, headers=headers)
+    # print(r.json())
+    raise HTTPException(status_code=500, detail=f'Обработка данных... {q}')
