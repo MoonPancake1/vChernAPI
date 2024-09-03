@@ -1,3 +1,5 @@
+import re
+
 from fastapi import APIRouter, Depends, Request, HTTPException, Query
 from fastapi.responses import RedirectResponse
 from fastapi.security import HTTPBearer
@@ -63,6 +65,10 @@ async def auth_vk(
         avatar: str,
         db: Session = Depends(get_db)
 ):
+    sizes = list(filter(lambda x: int(x.split('x')[0]) > 500,
+                        re.findall(r"as=\d+x\d+(?:,\d+x\d+)*", avatar)[0][3:].split(',')))
+
+    avatar = re.sub(r"cs=\d+x\d+", f"cs={sizes[0]}", avatar)
     user_vk = schemas.UserVK(
         id=user_id,
         username=f"{first_name} {last_name}",
