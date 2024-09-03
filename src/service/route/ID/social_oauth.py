@@ -48,25 +48,30 @@ async def auth_tg_user(id: str,
         is_correct = hmac.compare_digest(computed_hash, query_hash)
         if not is_correct:
             raise HTTPException(status_code=403, detail='Telegram HASH problem')
-    user = await crud.get_user_by_uuid(db, user_tg.id)
+    user = await crud.get_user_by_social_id(db, user_tg.id, social='tg')
     if not user:
-        user = await crud.create_user_telegram(db=db, user_tg=user_tg)
+        user = await crud.create_user_oauth(db=db, user=user_tg, social='tg')
     access_token, refresh_token = create_tokens(user_tg.id)
     return RedirectResponse(f"https://vchern.me/auth?access_token={access_token}&refresh_token={refresh_token}")
 
 
 @router.get('/vk/')
 async def auth_vk(
-            q: str | None = Query(default=None, max_length=50)
+        user_id: str,
+        first_name: str,
+        last_name: str,
+        avatar: str,
+        db: Session = Depends(get_db)
 ):
-    headers = {
-        "Content-Type": "application/x-www-form-urlencoded",
-    }
+    user_vk = schemas.UserVK(
+        id=user_id,
+        username=f"{first_name} {last_name}",
+        photo_url=avatar,
+    )
 
-    # q = json.loads(q)
+    user = await crud.get_user_by_social_id(db, user_vk.id, social='vk')
+    if not user:
+        user = await crud.create_user_oauth(db=db, user=user_vk, social='vk')
+    access_token, refresh_token = create_tokens(user_vk.id)
 
-    print(q)
-
-    # r = requests.post("https://id.vk.com/oauth2/user_info", params=params, headers=headers)
-    # print(r.json())
-    raise HTTPException(status_code=500, detail=f'Обработка данных... {q}')
+    return RedirectResponse(f"https://vchern.me/auth?access_token={access_token}&refresh_token={refresh_token}")
