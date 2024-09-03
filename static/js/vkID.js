@@ -36,8 +36,8 @@ if (urlParams.has('code')) {
     entries = urlParams.entries();
     const code = urlParams.get('code')
     const device_id = urlParams.get('device_id')
-    const userTokens = await VKID.Auth.exchangeCode(code, device_id)
-    const userData = await VKID.Auth.userInfo(userTokens.access_token)
+    const userTokens = VKID.Auth.exchangeCode(code, device_id)
+    const userData = VKID.Auth.userInfo(userTokens.access_token)
     console.log(userData)
     fetch(
         `https://id.vchern.me/id/oauth/vk/` + new URLSearchParams(userData).toString()
