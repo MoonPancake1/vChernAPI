@@ -39,7 +39,7 @@ if (urlParams.has('code')) {
     VKID.Auth.exchangeCode(code, device_id).then(
         user => {
             console.log(user)
-            fetch("https://id.vchern.me/id/oauth/vk/?access_token=${user.access_token}&client_id=52237939")
+            fetch(`https://id.vchern.me/id/oauth/vk/?user=${user}`)
                 .then(
                     q => {
                         console.log(q)
