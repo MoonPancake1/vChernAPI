@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from src.service.utils.Main import models, schemas
@@ -6,6 +6,7 @@ from src.service.utils.Main.utils import calc_rate
 
 
 # PROJECT
+
 
 async def get_project_by_id(db: Session, project_id: int) -> schemas.ProjectFull:
     project = db.query(models.Projects).filter(models.Projects.id == project_id).first()
@@ -16,8 +17,11 @@ async def get_project_by_id(db: Session, project_id: int) -> schemas.ProjectFull
     return project
 
 
-async def update_project(db: Session, current_project: schemas.Project, new_project_data: schemas.ProjectUpdate) \
-        -> schemas.Project:
+async def update_project(
+    db: Session,
+    current_project: schemas.Project,
+    new_project_data: schemas.ProjectUpdate,
+) -> schemas.Project:
     if not current_project:
         raise HTTPException(status_code=404, detail="Project not found")
     if new_project_data.title:
@@ -26,8 +30,6 @@ async def update_project(db: Session, current_project: schemas.Project, new_proj
         current_project.description = new_project_data.description
     if new_project_data.realize_project:
         current_project.realize_project = new_project_data.realize_project
-    if new_project_data.stack:
-        current_project.stack = new_project_data.stack
     if new_project_data.status:
         current_project.status = new_project_data.status
     if new_project_data.view:
@@ -49,7 +51,7 @@ async def delete_project(db: Session, project_id: int) -> dict[str, bool]:
         raise HTTPException(status_code=404, detail="Project not found")
     db.delete(project)
     db.commit()
-    return {'result': True}
+    return {"result": True}
 
 
 async def get_projects(db: Session):
@@ -72,7 +74,6 @@ async def create_project(db: Session, project: schemas.ProjectCreate):
         title=project.title,
         description=project.description,
         realize_project=project.realize_project,
-        stack=project.stack,
         status=project.status,
         view=0,
         link_logo=project.link_logo,
@@ -96,7 +97,9 @@ async def get_grades_project_by_id(db: Session, project_id: int):
     return db.query(models.Project_Grades).filter_by(project_id=project_id).all()
 
 
-async def create_grade_project(db: Session, grade: schemas.GradeCreate, user: schemas.User):
+async def create_grade_project(
+    db: Session, grade: schemas.GradeCreate, user: schemas.User
+):
     db_grade = models.Project_Grades(
         project_id=grade.project_id,
         user_uuid=user.uuid,
@@ -108,23 +111,25 @@ async def create_grade_project(db: Session, grade: schemas.GradeCreate, user: sc
     return db_grade
 
 
-async def update_grade(db: Session, grade: schemas.Grade, new_grade: schemas.GradeUpdate):
+async def update_grade(
+    db: Session, grade: schemas.Grade, new_grade: schemas.GradeUpdate
+):
     try:
         grade.grade = new_grade.grade
         db.commit()
         db.refresh(grade)
         return grade
     except Exception as e:
-        return {'result': False, 'detail': str(e)}
+        return {"result": False, "detail": str(e)}
 
 
 async def delete_grade_by_id(db: Session, grade: schemas.Grade):
     try:
         db.delete(grade)
         db.commit()
-        return {'result': True}
+        return {"result": True}
     except Exception as e:
-        return {'result': False, 'detail': str(e)}
+        return {"result": False, "detail": str(e)}
 
 
 # COMMENTS
@@ -135,10 +140,17 @@ async def get_comment_by_id(db: Session, comment_id: int):
 
 
 async def get_comments(db: Session, project_id: int):
-    return db.query(models.Project_Commetaries).filter_by(project_id=project_id).order_by(models.Project_Commetaries.id).all()
+    return (
+        db.query(models.Project_Commetaries)
+        .filter_by(project_id=project_id)
+        .order_by(models.Project_Commetaries.id)
+        .all()
+    )
 
 
-async def create_comment(db: Session, comment: schemas.CommentCreate, user: schemas.User):
+async def create_comment(
+    db: Session, comment: schemas.CommentCreate, user: schemas.User
+):
     db_comment = models.Project_Commetaries(
         project_id=comment.project_id,
         user_uuid=user.uuid,
@@ -150,23 +162,25 @@ async def create_comment(db: Session, comment: schemas.CommentCreate, user: sche
     return db_comment
 
 
-async def update_comment(db: Session, comment: schemas.Comment, new_comment: schemas.CommentUpdate):
+async def update_comment(
+    db: Session, comment: schemas.Comment, new_comment: schemas.CommentUpdate
+):
     try:
         comment.comment = new_comment.comment
         db.commit()
         db.refresh(comment)
         return comment
     except Exception as e:
-        return {'result': False, 'detail': str(e)}
+        return {"result": False, "detail": str(e)}
 
 
 async def delete_comment_by_id(db: Session, comment: schemas.Comment):
     try:
         db.delete(comment)
         db.commit()
-        return {'result': True}
+        return {"result": True}
     except Exception as e:
-        return {'result': False, 'detail': str(e)}
+        return {"result": False, "detail": str(e)}
 
 
 # ACHIEVEMENTS
@@ -179,7 +193,7 @@ async def create_achievement(db: Session, achievement: schemas.AchievementCreate
         company=achievement.company,
         link=achievement.link,
         rate=achievement.rate,
-        year=achievement.year
+        year=achievement.year,
     )
     db.add(db_achievement)
     db.commit()
@@ -191,33 +205,50 @@ async def get_achievements(db: Session):
     return db.query(models.Achievements).all()
 
 
-async def get_achievement_by_id(db: Session, achievement_id: int) -> schemas.Achievement:
+async def get_achievement_by_id(
+    db: Session, achievement_id: int
+) -> schemas.Achievement:
     achievement = db.query(models.Achievements).filter_by(id=achievement_id).first()
     if not achievement:
-        raise HTTPException(status_code=404, detail='Достижение не найдено!')
+        raise HTTPException(status_code=404, detail="Достижение не найдено!")
     return achievement
 
 
-async def update_achievement(db: Session, achievement: schemas.Achievement,
-                             new_achievement: schemas.AchievementUpdate):
+async def update_achievement(
+    db: Session,
+    achievement: schemas.Achievement,
+    new_achievement: schemas.AchievementUpdate,
+):
     try:
-        achievement.course = new_achievement.course if new_achievement.course else achievement.course
-        achievement.type = new_achievement.type if new_achievement.type else achievement.type
-        achievement.company = new_achievement.company if new_achievement.company else achievement.company
-        achievement.link = new_achievement.link if new_achievement.link else achievement.link
-        achievement.rate = new_achievement.rate if new_achievement.rate else achievement.rate
-        achievement.year = new_achievement.year if new_achievement.year else achievement.year
+        achievement.course = (
+            new_achievement.course if new_achievement.course else achievement.course
+        )
+        achievement.type = (
+            new_achievement.type if new_achievement.type else achievement.type
+        )
+        achievement.company = (
+            new_achievement.company if new_achievement.company else achievement.company
+        )
+        achievement.link = (
+            new_achievement.link if new_achievement.link else achievement.link
+        )
+        achievement.rate = (
+            new_achievement.rate if new_achievement.rate else achievement.rate
+        )
+        achievement.year = (
+            new_achievement.year if new_achievement.year else achievement.year
+        )
         db.commit()
         db.refresh(achievement)
         return achievement
     except Exception as e:
-        return {'result': False, 'detail': str(e)}
+        return {"result": False, "detail": str(e)}
 
 
 async def delete_achievement_by_id(db: Session, achievement: schemas.Achievement):
     try:
         db.delete(achievement)
         db.commit()
-        return {'result': True}
+        return {"result": True}
     except Exception as e:
-        return {'result': False, 'detail': str(e)}
+        return {"result": False, "detail": str(e)}

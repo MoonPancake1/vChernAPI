@@ -88,8 +88,9 @@ async def create_user(db: Session, user: schemas.UserCreate):
     return db_user
 
 
-async def update_user_data(db: Session,
-                           current_user: schemas.UserUpdate) -> [bool, str]:
+async def update_user_data(
+    db: Session, current_user: schemas.UserUpdate
+) -> [bool, str]:
     user = db.query(models.User).filter(models.User.id == current_user.id).first()
     user.nickname = current_user.nickname
     user.email = current_user.email
@@ -103,23 +104,24 @@ async def get_user_by_social_id(db: Session, social_id: str, social: str):
     Функция возвращает пользователя с определённыйм social_id
     """
 
-    if social == 'vk':
+    if social == "vk":
         return db.query(models.User).filter(models.User.vk_id == social_id).first()
-    elif social == 'tg':
+    elif social == "tg":
         return db.query(models.User).filter(models.User.tg_id == social_id).first()
 
 
-async def create_user_oauth(db: Session, user: schemas.UserTelegram | schemas.UserVK,
-                            social: str):
+async def create_user_oauth(
+    db: Session, user: schemas.UserTelegram | schemas.UserVK, social: str
+):
     uuid = str(uuid4())
-    if social == 'vk':
+    if social == "vk":
         db_user = models.User(
             uuid=uuid,
             nickname=user.username,
             avatar=user.photo_url,
             vk_id=str(user.id),
         )
-    elif social == 'tg':
+    elif social == "tg":
         db_user = models.User(
             uuid=uuid,
             nickname=user.username,

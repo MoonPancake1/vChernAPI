@@ -1,6 +1,4 @@
-import uuid
-
-from sqlalchemy import Boolean, Column, String, Integer, MetaData
+from sqlalchemy import Boolean, Column, String, Integer
 
 from src.service.utils.db import Base
 
@@ -9,6 +7,7 @@ class User(Base):
     """
     Модель пользователя
     """
+
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -18,8 +17,8 @@ class User(Base):
     hashed_password = Column(String, default=None)
     is_active = Column(Boolean, default=True)
     is_admin = Column(Boolean, default=False)
-    avatar = Column(String, default='static/avatars/default.png')
-    ip = Column(String, default='127.0.0.1')
+    avatar = Column(String, default="static/avatars/default.png")
+    ip = Column(String, default="127.0.0.1")
     vk_id = Column(String, default=None)
     tg_id = Column(String, default=None)
-    role = Column(String, default='user')
+    role = Column(String, default="user")

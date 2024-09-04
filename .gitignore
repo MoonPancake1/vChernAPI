@@ -280,3 +280,9 @@ $RECYCLE.BIN/
 vChernTestDB.db
 *.env*
 update-script
+migrations/
+*.pdf
+*.img
+venv/
+.idea
+.vscode

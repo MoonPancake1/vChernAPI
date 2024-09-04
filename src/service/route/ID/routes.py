@@ -5,7 +5,7 @@ from src.service.route.ID.users import router as users_router
 from src.service.route.ID.testing import router as testing_router
 from src.service.route.ID.social_oauth import router as social_oauth_router
 
-router = APIRouter(prefix="/id", tags=["ID"])
+router = APIRouter(prefix="/id")
 
 router.include_router(auth_router)
 router.include_router(files_router)

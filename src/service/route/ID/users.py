@@ -11,9 +11,9 @@ router = APIRouter(prefix="/users", tags=["users"])
 
 
 @router.get("/check/")
-async def check_users(nickname: str | None = None,
-                      email: str | None = None,
-                      db: Session = Depends(get_db)):
+async def check_users(
+    nickname: str | None = None, email: str | None = None, db: Session = Depends(get_db)
+):
     data = {}
     if nickname:
         username_check = await crud.get_user_by_nickname(db, nickname=nickname)
@@ -26,8 +26,9 @@ async def check_users(nickname: str | None = None,
 
 # Standart create user
 @router.post("/", response_model=schemas.User)
-async def create_user(request: Request,
-                      user: schemas.UserCreate, db: Session = Depends(get_db)):
+async def create_user(
+    request: Request, user: schemas.UserCreate, db: Session = Depends(get_db)
+):
     """
     Функция для создания пользователя в базе данных
     :param user: данные о пользователе в виде макета UserCreate
@@ -48,8 +49,10 @@ async def create_user(request: Request,
 
 @router.get("/", response_model=list[schemas.User] | dict)
 async def read_users(
-        current_user: Annotated[schemas.User, Depends(get_current_active_user)],
-        skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
+    current_user: Annotated[schemas.User, Depends(get_current_active_user)],
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
 ):
     """
     Функция читает от skip до limit включительно пользователей из базы данных
@@ -62,13 +65,16 @@ async def read_users(
     if current_user.is_admin:
         users = await crud.get_users(db, skip=skip, limit=limit)
         return users
-    raise HTTPException(status_code=403, detail="Данный пользователь не обладает нужными правами доступа!")
+    raise HTTPException(
+        status_code=403,
+        detail="Данный пользователь не обладает нужными правами доступа!",
+    )
 
 
 @router.get("/me")
 async def read_user_me(
-        current_user: Annotated[schemas.User, Depends(get_current_active_user)],
-        db: Session = Depends(get_db)
+    current_user: Annotated[schemas.User, Depends(get_current_active_user)],
+    db: Session = Depends(get_db),
 ):
     """
     Функция, которая возвращает данные о текущем пользователе
@@ -80,25 +86,23 @@ async def read_user_me(
 
 @router.put("/me")
 async def update_user_me(
-        current_user: Annotated[schemas.User, Depends(get_current_active_user)],
-        new_user_data: schemas.UserUpdate,
-        db: Session = Depends(get_db)
+    current_user: Annotated[schemas.User, Depends(get_current_active_user)],
+    new_user_data: schemas.UserUpdate,
+    db: Session = Depends(get_db),
 ):
     check = await check_users(new_user_data.nickname, new_user_data.email, db)
     if new_user_data.nickname:
-        if (not check.get("nickname")) and \
-                new_user_data.nickname != current_user.nickname:
+        if (
+            not check.get("nickname")
+        ) and new_user_data.nickname != current_user.nickname:
             current_user.nickname = new_user_data.nickname
         else:
-            raise HTTPException(status_code=400,
-                                detail="Никнейм уже существует")
+            raise HTTPException(status_code=400, detail="Никнейм уже существует")
     if new_user_data.email:
-        if (not check.get("email")) and \
-                new_user_data.email != current_user.email:
+        if (not check.get("email")) and new_user_data.email != current_user.email:
             current_user.email = new_user_data.email
         else:
-            raise HTTPException(status_code=400,
-                                detail="Почта уже привязана!")
+            raise HTTPException(status_code=400, detail="Почта уже привязана!")
     if new_user_data.avatar:
         current_user.avatar = new_user_data.avatar
     await crud.update_user_data(db, current_user)

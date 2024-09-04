@@ -8,13 +8,12 @@ class Projects(Base):
     Модель для проектов
     """
 
-    __tablename__ = 'projects'
+    __tablename__ = "projects"
 
     id = Column(Integer, primary_key=True)
     title = Column(String)
     description = Column(String)
     realize_project = Column(Date)
-    stack = Column(JSON)
     status = Column(String)
     view = Column(Integer, default=0)
     link_logo = Column(String)
@@ -27,7 +26,7 @@ class Project_Grades(Base):
     Модель для оценок проекта
     """
 
-    __tablename__ = 'project_grades'
+    __tablename__ = "project_grades"
 
     id = Column(Integer, primary_key=True)
     project_id = Column(Integer)
@@ -40,7 +39,7 @@ class Project_Commetaries(Base):
     Модель для комментариев к проекту
     """
 
-    __tablename__ = 'project_commetaries'
+    __tablename__ = "project_commetaries"
 
     id = Column(Integer, primary_key=True)
     project_id = Column(Integer)
@@ -53,7 +52,7 @@ class Achievements(Base):
     Модель для достижений
     """
 
-    __tablename__ = 'achievements'
+    __tablename__ = "achievements"
 
     id = Column(Integer, primary_key=True)
     course = Column(String)
@@ -62,4 +61,3 @@ class Achievements(Base):
     link = Column(String)
     rate = Column(String)
     year = Column(Date)
-

@@ -10,10 +10,12 @@ from src.service.utils.db import get_db
 router = APIRouter(prefix="/achievement", tags=["achievement"])
 
 
-@router.post('/')
-async def create_achievement(current_user: Annotated[schemas.User, Depends(get_current_active_user)],
-                             achievement: schemas.Achievement,
-                             db: Session = Depends(get_db)):
+@router.post("/")
+async def create_achievement(
+    current_user: Annotated[schemas.User, Depends(get_current_active_user)],
+    achievement: schemas.Achievement,
+    db: Session = Depends(get_db),
+):
     if current_user:
         if current_user.is_admin:
             return await crud.create_achievement(db=db, achievement=achievement)
@@ -23,16 +25,18 @@ async def create_achievement(current_user: Annotated[schemas.User, Depends(get_c
         raise HTTPException(status_code=404, detail="Пользователь не найден!")
 
 
-@router.get('/')
+@router.get("/")
 async def get_achievements(db: Session = Depends(get_db)):
     return await crud.get_achievements(db=db)
 
 
-@router.get('/{achievement_id}/')
-async def get_achievement(current_user: Annotated[schemas.User, Depends(get_current_active_user)],
-                          achievement_id: int,
-                          db: Session = Depends(get_db)):
-    db_achievement = await crud. get_achievement_by_id(db, achievement_id)
+@router.get("/{achievement_id}/")
+async def get_achievement(
+    current_user: Annotated[schemas.User, Depends(get_current_active_user)],
+    achievement_id: int,
+    db: Session = Depends(get_db),
+):
+    db_achievement = await crud.get_achievement_by_id(db, achievement_id)
     if not db_achievement:
         raise HTTPException(status_code=404, detail="Достижение не найдено!")
     if not current_user:
@@ -42,11 +46,13 @@ async def get_achievement(current_user: Annotated[schemas.User, Depends(get_curr
     return db_achievement
 
 
-@router.put('/{achievement_id}/')
-async def update_achievement(current_user: Annotated[schemas.User, Depends(get_current_active_user)],
-                             achievement_id: int,
-                             new_achievement: schemas.AchievementUpdate,
-                             db: Session = Depends(get_db)):
+@router.put("/{achievement_id}/")
+async def update_achievement(
+    current_user: Annotated[schemas.User, Depends(get_current_active_user)],
+    achievement_id: int,
+    new_achievement: schemas.AchievementUpdate,
+    db: Session = Depends(get_db),
+):
     achievement = await crud.get_achievement_by_id(db, achievement_id)
     if not achievement:
         raise HTTPException(status_code=404, detail="Достижение не найдено!")
@@ -57,10 +63,12 @@ async def update_achievement(current_user: Annotated[schemas.User, Depends(get_c
     return await crud.update_achievement(db, achievement, new_achievement)
 
 
-@router.delete('/{achievement_id}/')
-async def delete_achievement(current_user: Annotated[schemas.User, Depends(get_current_active_user)],
-                             achievement_id: int,
-                             db: Session = Depends(get_db)):
+@router.delete("/{achievement_id}/")
+async def delete_achievement(
+    current_user: Annotated[schemas.User, Depends(get_current_active_user)],
+    achievement_id: int,
+    db: Session = Depends(get_db),
+):
     achievement = await crud.get_achievement_by_id(db, achievement_id)
     if not achievement:
         raise HTTPException(status_code=404, detail="Достижение не найдено!")

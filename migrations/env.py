@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from src.config.project_config.config import settings, database
+from src.config.config import settings, database
 from src.service.utils.ID.models import User
 from src.service.utils.Main.models import Projects, Project_Grades, Project_Commetaries
 
@@ -15,14 +15,10 @@ config = context.config
 
 section = config.config_ini_section
 
-if not settings.DEBUG:
-    SQLALCHEMY_DATABASE_URL = (f"{settings.DB_ENGINE}://{database.POSTGRES_USER}:{database.POSTGRES_PASSWORD}@"
-                               f"{settings.DB_HOST}/{database.POSTGRES_DB}")
-    config.set_section_option(section, "DATABASE_URI", SQLALCHEMY_DATABASE_URL)
-else:
-    SQLALCHEMY_DATABASE_URL = f"{settings.DB_ENGINE}://{database.TEST_POSTGRES_USER}:{database.TEST_POSTGRES_PASSWORD}@" + \
-        f"{settings.TEST_DB_HOST}/{database.POSTGRES_DB}"
-    config.set_section_option(section, "DATABASE_URI", SQLALCHEMY_DATABASE_URL)
+
+SQLALCHEMY_DATABASE_URL = (f"{settings.DB_ENGINE}://{database.POSTGRES_USER}:{database.POSTGRES_PASSWORD}@"
+                            f"{settings.DB_HOST}/{database.POSTGRES_DB}")
+config.set_section_option(section, "DATABASE_URI", SQLALCHEMY_DATABASE_URL)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

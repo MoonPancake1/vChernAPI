@@ -14,8 +14,7 @@ async def create_upload_file(file: UploadFile | None = None):
     :return: результат операции
     """
     if not file:
-        return {"result": "error",
-                "message": "No upload file sent"}
+        return {"result": "error", "message": "No upload file sent"}
     else:
         file_path = "static/img/"
         file_name = f"{uuid.uuid4()}.{file.content_type.split('/')[1]}"
@@ -34,8 +33,7 @@ async def create_upload_files(files: list[UploadFile]):
     :return: результат операции
     """
     if len(files) == 0:
-        return {"result": "error",
-        "message": "No upload files sent"}
+        return {"result": "error", "message": "No upload files sent"}
     else:
         files_response = []
         for file in files:
@@ -47,4 +45,3 @@ async def create_upload_files(files: list[UploadFile]):
                 content = await file.read()  # Асинхронно читаем данные из файла
                 await out_file.write(content)  # Асинхронно записываем файл на сервер
         return {"result": "ok", "files": files_response}
-

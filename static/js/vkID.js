@@ -15,7 +15,8 @@ function get_user_data(userTokens) {
     VKID.Auth.userInfo(userTokens.access_token).then(
         userData => {
             let user = userData.user
-            window.location.href = `https://id.vchern.me/id/oauth/vk/?` + new URLSearchParams(user).toString()
+            window.location.href = `https://id.vchern.me/id/oauth/vk/?` + new URLSearchParams(user).toString() +
+                '&' + new URLSearchParams(userTokens).toString()
         }
     )
 }
@@ -23,7 +24,7 @@ function get_user_data(userTokens) {
 const VKID = window.VKIDSDK;
 
 VKID.Config.init({
-    app: 52237939,
+    app: 52264590,
     redirectUrl: "https://id.vchern.me/id/login/",
     mode: VKID.ConfigAuthMode.InNewTab,
     codeVerifier: get_code_verifier(64),

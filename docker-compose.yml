@@ -15,7 +15,7 @@ services:
     image: postgres:alpine
     container_name: vchern_api_db
     volumes:
-      - postgres_data_vchern_api:/var/lib/postgresql/data/
+      - postgres_data_2_vchern_api:/var/lib/postgresql/data/
     ports:
       - "10800:5432"
     env_file:
@@ -32,4 +32,4 @@ services:
       - vchern_api_service
 
 volumes:
-  postgres_data_vchern_api:
+  postgres_data_2_vchern_api:

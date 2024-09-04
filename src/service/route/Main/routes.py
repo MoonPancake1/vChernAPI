@@ -5,7 +5,7 @@ from src.service.route.Main.comments import router as comments_router
 from src.service.route.Main.achievements import router as achievements_router
 
 
-router = APIRouter(prefix="/main", tags=["Main"])
+router = APIRouter(prefix="/main")
 
 router.include_router(project_router)
 router.include_router(grades_router)

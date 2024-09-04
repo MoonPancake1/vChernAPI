@@ -6,11 +6,11 @@ from pydantic import BaseModel
 
 # Project
 
+
 class ProjectCreate(BaseModel):
     title: str
     description: str
     realize_project: date
-    stack: dict
     status: str
     link_logo: str | None = None
     github_link: str | None = None
@@ -22,7 +22,6 @@ class Project(BaseModel):
     title: str
     description: str
     realize_project: date
-    stack: dict
     status: str
     view: int
     link_logo: str | None = None
@@ -38,7 +37,6 @@ class ProjectUpdate(BaseModel):
     title: str | None = None
     description: str | None = None
     realize_project: date | None = None
-    stack: dict | None = None
     status: str | None = None
     view: int | None = None
     link_logo: str | None = None
@@ -48,10 +46,12 @@ class ProjectUpdate(BaseModel):
 
 # User
 
+
 class User(BaseModel):
     """
     Модель для полного представления объекта в коде
     """
+
     uuid: str
     nickname: str
     email: str
@@ -66,6 +66,7 @@ class User(BaseModel):
 
 # Grades
 
+
 class GradeCreate(BaseModel):
     project_id: int
     grade: int
@@ -79,11 +80,13 @@ class GradeUpdate(BaseModel):
 class Grade(GradeCreate):
     user_uuid: str
 
+
 class Grades(GradeCreate):
     pass
 
 
 # Comment
+
 
 class CommentCreate(BaseModel):
     project_id: int
