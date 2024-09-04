@@ -14,16 +14,16 @@ router = APIRouter(prefix="/grade", tags=["grade"])
 
 @router.post("/")
 async def create_grade(current_user: Annotated[schemas.User, Depends(get_current_active_user)],
-                       grade: schemas.GradeCreate,
+                       grade_user: schemas.GradeCreate,
                        db: Session = Depends(get_db)):
-    project = await crud.get_project_by_id(db, grade.project_id)
+    project = await crud.get_project_by_id(db, grade_user.project_id)
     if not project:
         raise HTTPException(status_code=404, detail="Проект не найден!")
     grades = await crud.get_grades_project_by_id(db, project.id)
     for grade in grades:
         if grade.user_uuid == current_user.uuid:
             raise HTTPException(status_code=403, detail="Пользователь может поставить только 1 оценку!")
-    grade = await crud.create_grade_project(db, grade, current_user)
+    grade = await crud.create_grade_project(db, grade_user, current_user)
     return grade
 
 
