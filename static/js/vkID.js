@@ -23,7 +23,7 @@ function get_user_data(userTokens) {
 const VKID = window.VKIDSDK;
 
 VKID.Config.init({
-    app: 52237939,
+    app: 52264590,
     redirectUrl: "https://id.vchern.me/id/login/",
     mode: VKID.ConfigAuthMode.InNewTab,
     codeVerifier: get_code_verifier(64),
