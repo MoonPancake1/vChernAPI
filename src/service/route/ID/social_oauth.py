@@ -63,12 +63,29 @@ async def auth_vk(
         first_name: str,
         last_name: str,
         avatar: str,
+        access_token: str,
         db: Session = Depends(get_db)
 ):
+    # Завершаем сессию пользователя
+    params = {
+        "client_id": settings.VK_CLIENT_ID,
+        "access_token": access_token,
+    }
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+    }
+
+    try:
+        r = requests.post("https://id.vk.com/oauth2/logout", params=params, headers=headers)
+    except Exception as e:
+        print(f"Не удалось разлогинить пользователя! Ошибка: {e}. Данные: {params}, {headers}")
+
+    # Отбираем размеры аватарки больше 500х500
     sizes = list(filter(lambda x: int(x.split('x')[0]) > 500,
                         re.findall(r"as=\d+x\d+(?:,\d+x\d+)*", avatar)[0][3:].split(',')))
+    if sizes:
+        avatar = re.sub(r"cs=\d+x\d+", f"cs={sizes[0]}", avatar)
 
-    avatar = re.sub(r"cs=\d+x\d+", f"cs={sizes[0]}", avatar)
     user_vk = schemas.UserVK(
         id=user_id,
         username=f"{first_name} {last_name}",
